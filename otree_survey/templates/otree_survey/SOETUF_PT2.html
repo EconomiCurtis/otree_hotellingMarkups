@@ -1,0 +1,61 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+{% load i18n %}
+
+{% block title %}
+    Please answer the following questions.
+{% endblock %}
+
+{% block styles %}
+
+    <style type="text/css">
+        .radio-inline {
+            margin-right: 70px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        How strongly or weakly did you feel each of the following during the story:
+    </h3>
+
+    <div class="table-responsive">
+       <h4>
+<!--         VS = {% trans "Very Strong" %};  
+        S = {% trans "Strong" %}; 
+        M = {% trans "Moderate" %}; 
+        W = {% trans "Weak" %}; 
+        NAL = {% trans "Not At All" %} -->
+        
+        </h4>
+             <table class="table table-striped"  style="width:900px">
+                <tr><th scope="col" colspan = "1"  width="256px"></th>
+                    <th scope="col" colspan = "1">
+                        <th width="106px" style="text-align:center">Very Strong</th> 
+                        <th width="106px" style="text-align:center">Strong</th>
+                        <th width="106px" style="text-align:center">Moderate</th>
+                        <th width="106px" style="text-align:center">Weak</th>
+                        <th width="106px" style="text-align:center">Not at All</th>
+                        <th width="106px" style="text-align:center"> </th>
+
+
+                </th>
+            </tr>
+                {% for field in form %}
+                <tr><td width="150px"> {{ field.label }}</td>
+                    <td scope="col" colspan = "7" align="right" width="750px"
+                    style="padding-right:75px"> {{field}}</td></tr>
+
+                {% endfor %}
+             </table>
+         </div>
+     </br>
+ 
+    {% next_button %}
+
+{% endblock %}
+
+

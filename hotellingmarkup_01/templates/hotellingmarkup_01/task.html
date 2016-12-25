@@ -1,0 +1,300 @@
+{% extends "global/BaseHotMarkup.html" %}
+{% load staticfiles otree_tags %}
+{% load multiply %}
+
+
+{% block title %}
+    Round {{round}} of {{num_rounds}}
+{% endblock %}
+
+
+
+{% block content %}
+
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border:none;margin:0px auto;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
+.tg .tg-yw4l{vertical-align:top;padding:50px;}
+</style>
+<table class="tg table-striped">
+  <tr>
+    <th class="tg-031e" colspan="4">
+
+        <h2>Subperiod timer: <font color="red"><div style="display: inline" id="countdown"></div></font>
+
+    </th>
+  </tr>
+  <tr>
+    <td class="tg-031e" height="500px" width="100px">
+        <div class="input-group slider" data-slider="" style="width:500px;padding:10px;position:relative;">
+        <input type="range" name="price" step="0.01" min="0" max="1" 
+        id="id_price" value={{ my_prev_price }} class="form-control"
+        oninput="sliderChange(this.value)" align="left">
+        <!-- <span class="input-group-addon" data-slider-value="" title="current value">5</span> -->
+        </div>
+
+    </td>
+    <td class="tg-031e" colspan="3" width="800px">
+         <body onload="draw();">
+           <canvas id="canvas" width="400" height="400" style="padding:0px;" align="left"></canvas>
+         </body>
+
+    </td>
+  </tr>
+  <tr>
+
+    <td class="tg-yw4l" colspan="2" width="50%">
+        <h3>Your Price is: <span name="price_text" id="id_price_text">{{ my_prev_price|floatformat:"2" }}</span></h3></h3>
+
+        <h3>Your Location is: {{my_loc}}            
+
+        <h3>My market boundry is <span name="price_text" id="id_market_boundary_text">...</span></h3>
+
+        <h3>My market share <span name="market_share" id="id_market_share">...</span></h3>
+
+        <h3>My profit is: <span name="profit_text" id="id_profit_text">...</span></h3>
+    </td>
+
+    <td class="tg-yw4l" colspan="2"  width="50%">
+        <h3>Counterparty's Price: {{other_prev_price|floatformat:"2" }}</h3>
+        <h3>Counterparty's Location: {{other_loc}} </h3>
+        <h3>Counterparty's Profit: <span name="other_profit_text" id="id_other_profit_text">...</span></h3>
+        <h3>Intersection: <span name="Intersection" id="id_Intersection">...</span></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l" colspan="2"></td>
+    <td class="tg-yw4l" colspan="2"></td>
+  </tr>
+</table>  
+
+
+
+
+
+
+<input class="btn btn-primary btn-large btn-primary next-button" type="submit" value="Next"  style=" visibility:hidden;">
+
+    {% if debug %}
+
+
+
+
+    {% endif %}
+
+
+<script type="text/javascript">
+
+</script>
+
+<script>
+var mybtn = document.querySelectorAll('.btn');
+var i = 0;
+
+var timer = setInterval(function() {
+     if( i < mybtn.length) {
+         mybtn[i].click();
+         console.log("Click handler for button " + i + " fired");
+     } else {
+         clearInterval(timer);
+     }
+     i = i + 1;
+}, ({{subperiod_timer}} * 1000));
+</script>
+
+<script>
+
+
+function draw(my_p_) {
+    //seperate this into static and dynamic components. 
+  var canvas = document.getElementById('canvas');
+  if (canvas.getContext){
+
+    // setup variables
+    var my_p = {{ my_prev_price}};
+    if (my_p_ != undefined) {
+        my_p = (Number(my_p_)).toFixed(2);
+    }  
+    var my_l = (Number({{my_loc}})).toFixed(2);
+    var other_p = {{other_prev_price}};
+    var other_l = {{other_loc}};
+    var t = 1;
+    var intersection = (Number(my_p_));
+    var market_share = "";
+
+    // Calc payoff info 
+    if (my_l == 0.25){
+        intersection = (t *(other_l)+(other_p) + t * (my_l) - (my_p)) / (2*t);
+        if (intersection >= other_l) {
+            pi_1 = 1 * my_p;
+            pi_2 = 0;
+            boundary = 1;
+            market_share = "0 to 1";
+            boundary_lo = 0;
+            boundary_hi = 1;
+          } else if (intersection <= my_l){
+            // # is p2 priced so low as to win the market?
+            pi_1 = 0;
+            pi_2 = 1 * other_p;
+            boundary = 0;
+            market_share = "None";
+            boundary_lo = 0;
+            boundary_hi = 0; 
+          } else {
+            // # else, they share market, 
+            // # find intersection: 
+            pi_1 = my_p * intersection;
+            pi_2 = other_p * (1 - intersection);
+            boundary = intersection;
+            market_share =  "0 to " + boundary.toFixed(2);
+            boundary_lo = intersection;
+            boundary_hi = 1; 
+          }
+
+    }
+
+    if ({{my_loc}} == 0.75){
+        // if I am player2:
+        intersection = (((t*(my_l))) + Number(my_p) + (t * (other_l)) - (other_p)) / (2*t);
+        if (intersection >= my_l) {
+            pi_2 = 1 * other_l;
+            pi_1 = 0;
+            boundary = 1;
+            market_share = "None";
+            boundary_lo = 0;
+            boundary_hi = 0;
+          } else if (intersection <= other_l){
+            // # is p2 priced so low as to win the market?
+            pi_2 = 0;
+            pi_1 = 1 * my_p;
+            boundary = 0;
+            market_share = "0 to 1";
+            boundary_lo = 0;
+            boundary_hi = 1;
+          } else {
+            // # else, they share market, 
+            // # find intersection: 
+            pi_2 = other_p * intersection;
+            pi_1 = my_p * (1 - intersection);
+            boundary = intersection;
+            market_share = boundary.toFixed(2) + " to 1 ";
+            boundary_lo = 0;
+            boundary_hi = Intersection;
+          }
+    }
+
+
+
+    // update html text stuff
+    document.getElementById('id_price_text').innerHTML = my_p;
+    document.getElementById('id_Intersection').innerHTML = intersection.toFixed(3);
+    document.getElementById('id_market_boundary_text').innerHTML = boundary.toFixed(3);
+    document.getElementById('id_profit_text').innerHTML = pi_1.toFixed(3);
+    document.getElementById('id_other_profit_text').innerHTML = pi_2.toFixed(3);
+    document.getElementById('id_market_share').innerHTML = market_share;
+
+
+
+    var ctx = canvas.getContext('2d');
+
+    var wdt = 400; //size of box
+    var mrg = 15;
+
+    // background
+    ctx.fillRect(0,0,wdt,wdt);
+    ctx.clearRect(mrg,mrg,(wdt-2*mrg),(wdt-2*mrg));
+
+    // p1
+    ctx.strokeStyle = "#424242";
+    var p1_x = (mrg + ((wdt-2*mrg)) * {{my_loc}});
+    var p1_y = (wdt-2*mrg) - ((wdt-4*mrg) * my_p);
+    ctx.beginPath();
+    ctx.moveTo((p1_x + 5), p1_y);
+    ctx.arc(p1_x, p1_y, 5,0,Math.PI*2,true);  // Left eye
+    ctx.stroke();
+
+    var p2_x = (mrg + ((wdt-2*mrg)) * {{other_loc}});
+    var p2_y = (wdt-2*mrg) - ((wdt-4*mrg) * {{other_prev_price}});
+    ctx.beginPath();
+    ctx.moveTo(p2_x+5,p2_y);
+    ctx.arc(p2_x,p2_y,5,0,Math.PI*2,true);  // Right eye
+    ctx.stroke();
+
+    // boundary/intersection line
+    ctx.strokeStyle = "#ada9a9";
+    ctx.beginPath();
+    ctx.moveTo((mrg + ((wdt-2*mrg) * boundary)), mrg);
+    ctx.lineTo((mrg + ((wdt-2*mrg) * boundary)), mrg+wdt);
+    ctx.stroke();
+
+
+  }
+
+}
+
+function sliderChange(val){
+    var my_p = {{ my_prev_price}};
+    if (val != undefined) {
+        my_p = (Number(val)).toFixed(2);
+    }     
+    sliderChange_2(my_p);
+    draw(my_p);
+    return my_p;
+}
+
+    function sliderChange_2(val) {
+        
+        var my_p = (Number(val)).toFixed(2);
+        var my_l = (Number({{my_loc}})).toFixed(2);
+        var other_p = {{other_prev_price}};
+        var other_l = {{other_loc}};
+        var t = 1;
+        var intersection = (Number(val));
+        var market_share = "";
+
+
+
+
+    }
+
+
+
+</script>
+
+<!-- Countdown timer -->
+<script>
+    function countdown( elementName, minutes, seconds )
+    {
+        var element, endTime, hours, mins, msLeft, time;
+
+        function twoDigits( n )
+        {
+            return (n <= 9 ? "0" + n : n);
+        }
+
+        function updateTimer()
+        {
+            msLeft = endTime - (+new Date);
+            if ( msLeft < 1000 ) {
+                element.innerHTML = "0";
+            } else {
+                time = new Date( msLeft );
+                hours = time.getUTCHours();
+                mins = time.getUTCMinutes();
+                element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+                setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+            }
+        }
+
+        element = document.getElementById( elementName );
+        endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
+        updateTimer();
+    }
+
+    countdown( "countdown", 0, {{subperiod_timer}});
+    countdown( "countdown2", 100, 0 );
+ </script>
+
+{% endblock %}

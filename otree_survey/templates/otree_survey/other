@@ -1,0 +1,8 @@
+
+For html
+<!--                 <tr><td> {{ field.label }} </td>
+                    {% for choice in field.field.widget %}
+                    https://code.djangoproject.com/ticket/9230
+                        <td>{{choice.0}}</td>
+                    {% endfor %}
+                <tr> -->

@@ -1,0 +1,35 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+{% load i18n %}
+
+{% block title %}
+    Please answer the following questions.
+{% endblock %}
+
+{% block content %}
+
+    <p>
+        
+    </p>
+
+    <div class="row">
+    <table class="table">
+
+        {% for field in form %}
+        <tr>
+            <td>heey {% autoescape off %}   {{field.label}}  {% endautoescape %}</td>
+            <td>
+
+                <p>{{field}}</p>
+                {% if field.errors %}<p class="text-danger">{{field.errors}}</p>{% endif %}
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+    </div>
+
+    {% next_button %}
+
+{% endblock %}

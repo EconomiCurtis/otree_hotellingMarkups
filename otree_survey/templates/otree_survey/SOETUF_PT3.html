@@ -1,0 +1,37 @@
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+{% load i18n %}
+
+{% block title %}
+    Please answer the following questions.
+{% endblock %}
+
+{% block content %}
+
+    <h3> 
+    </h3>
+
+    <div class="table-responsive">
+       <h4>
+<!--         VS = {% trans "Very Strong" %};  
+        S = {% trans "Strong" %}; 
+        M = {% trans "Moderate" %}; 
+        W = {% trans "Weak" %}; 
+        NAL = {% trans "Not At All" %} -->
+        
+        </h4>
+             <table class="table table-striped">
+                <!-- <tr><td></td><td>Very Strong</td><td>Strong</td><td>Moderate</td><td>Weak</td><td>Not at All</td></tr> -->
+                {% for field in form %}
+                <tr><td>{{ field.label }}</td><td>{{field}}</td></tr>
+
+                {% endfor %}
+             </table>
+         </div>
+     </br>
+ 
+    {% next_button %}
+
+{% endblock %}
+
+

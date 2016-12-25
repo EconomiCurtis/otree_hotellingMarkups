@@ -1,0 +1,35 @@
+
+
+{% extends "global/Base.html" %}
+{% load staticfiles otree_tags %}
+{% load i18n %}
+
+{% block title %}
+    Please answer the following questions.
+{% endblock %}
+
+{% block content %}
+
+    <h3>
+        While all elements of society may have benefitted from the findings of the study, … 
+    </h3>
+
+    <div class="table-responsive">
+<!--        <h4>
+            SA = {% trans "Strongly Agree" %};  
+            A = {% trans "Agree" %}; 
+            D = {% trans "Disagree" %}; 
+            SD = {% trans "Strongly Disagree" %}; 
+            DK = {% trans "Don't Know" %}
+        </h4> -->
+             <table class="table table-striped">
+                {% for field in form %}
+                <tr><td width="35%" style="vertical-align:middle"><h4>{{ field.label }}</h4></td><td style="vertical-align:middle" align="right">{{field}}</td></tr>
+                {% endfor %}
+             </table>
+         </div>
+     </br>
+ 
+    {% next_button %}
+
+{% endblock %}
