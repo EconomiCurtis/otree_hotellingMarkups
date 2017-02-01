@@ -28,16 +28,17 @@ class Intro(Page):
             'other_loc':self.player.get_others_in_group()[0].participant.vars["loc"],
         }
 
-class WaitPage(WaitPage):
+class WaitPage1(WaitPage):
+    def is_displayed(self):
+        return self.round_number == 1
 
-    def after_all_players_arrive(self):
-        pass
+
+
 
 class task(Page):   
-
-
     # timeout_seconds = 10
     # timeout_submission = {'price': 1}
+
 
     form_model = models.Player
     form_fields = [
@@ -49,17 +50,30 @@ class task(Page):
 
     def vars_for_template(self):
 
-        if self.round_number == 1:
+        subperiod_timer = self.player.subperiod_time
+        subperiod_timer = 5
+
+        if self.round_number == 1: #initial price randomized in models subsession
             my_prev_price = self.player.price
             other_prev_price = self.player.get_others_in_group()[0].price
+            cumulative_round_payoff = 0
         else: 
-            my_prev_price = self.player.in_round(self.round_number-1).price
+            my_prev_price = self.player.in_round(self.round_number-1).price #else pull price from previous round. 
             other_prev_price = self.player.get_others_in_group()[0].in_round(self.round_number-1).price
-       
+
+
+            # cumulative_round_payoff = 0
+            # for p in self.player.in_all_rounds():
+            #     if (p.round_payoff != None:
+            #         cumulative_round_payoff = cumulative_round_payoff + p.round_payoff
+            cumulative_round_payoff = sum([p.round_payoff for p in self.player.in_all_rounds() if (p.round_payoff != None)])
+
+
+
 
          
         return {
-            'subperiod_timer':self.player.subperiod_time,
+            'subperiod_timer':subperiod_timer,
             'transport_cost':self.player.transport_cost,
             'round':self.round_number,
             'num_rounds':Constants.num_rounds,
@@ -67,12 +81,15 @@ class task(Page):
             'my_prev_price':my_prev_price,
             'other_prev_price':other_prev_price,
             'other_loc':self.player.get_others_in_group()[0].participant.vars["loc"],
+            'cumulative_round_payoff':cumulative_round_payoff
         }
 
 
+class WaitPage(WaitPage):
 
-    def before_next_page(self):
-        pass 
+    def after_all_players_arrive(self):
+        #calc payoffs and stuff
+        self.group.set_payoffs() 
 
 
 class ResultsWaitPage(WaitPage):
@@ -91,4 +108,4 @@ class Results(Page):
     def vars_for_template(self):
         pass
 
-page_sequence = [Intro, WaitPage, task, Results]
+page_sequence = [Intro, WaitPage1, task, WaitPage, Results]

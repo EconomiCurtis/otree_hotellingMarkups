@@ -140,6 +140,7 @@ SESSION_CONFIGS = [
             'hotellingmarkup_01'
         ],
         # 'subperiod_time': 300,
+        # 'transport_cost': 1,
     },
 
 

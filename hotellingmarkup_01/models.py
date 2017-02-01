@@ -30,8 +30,8 @@ doc = """
 
 class Constants(BaseConstants):
     name_in_url = 'task'
-    task_timer = 600 #see Subsession, before_session_starts setting. 
-    num_rounds = 15
+    task_timer = 5 #see Subsession, before_session_starts setting. 
+    num_rounds = 25
     players_per_group = 2 
     transport_cost = 1
 
@@ -52,7 +52,7 @@ class Subsession(BaseSubsession):
 			else:
 			    p.transport_cost = Constants.transport_cost
 
-			if self.round_number == 1:
+			if self.round_number == 1: 
 				p.price = random.uniform(0, 1)
 
 				#set loc based on player id
@@ -66,7 +66,94 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
-	pass
+
+	def set_payoffs(self):
+		"""calculate payoffs in round"""
+
+		for p in self.get_players():
+
+			# if no price (ie price-slider unoved), get prev subperiod price
+			if p.price == None:
+				p.price = p.in_round(self.round_number-1).price
+
+			# loc variable setup
+			if p.participant.vars['loc'] == 0.25:
+				p1_l = 0.25
+				p1_p = p.price
+			elif p.participant.vars['loc'] == 0.75:
+				p2_l = 0.75
+				p2_p = p.price
+
+			t = p.transport_cost
+
+
+		for p in self.get_players():
+
+			# payoffs conditional on player type.
+			# Calc payoff info 
+			if (p.participant.vars['loc'] == 0.25):
+			    intersection = ((t * p2_l) + p2_p + (t * p1_l) - p1_p) / (2*t)
+			    if (intersection > 0.75):
+			        pi_1 = 1 * p1_p
+			        pi_2 = 0
+			        boundary = 1
+			        market_share = "0 to 1"
+			        boundary_lo = 0
+			        boundary_hi = 1
+			    elif (intersection < 0.25):
+			        # is p2 priced so low as to win the market?
+			        pi_1 = 0
+			        pi_2 = 1 * p2_p
+			        boundary = 0
+			        market_share = "None"
+			        boundary_lo = 0
+			        boundary_hi = 0 
+			    else:
+			        # else, they share market, 
+			        # find intersection: 
+			        pi_1 = p1_p * intersection
+			        pi_2 = p2_p * (1 - intersection)
+			        boundary = intersection
+			        market_share =  "0 to " + str(boundary)
+			        boundary_lo = 0
+			        boundary_hi = intersection
+
+			if (p.participant.vars['loc'] == 0.75):
+			    #if I am player2:
+			    intersection = ((t*p2_l) + p2_p + (t * p1_l) - p1_p) / (2*t)
+			    if (intersection > 0.75):
+			        pi_2 = 1 * p1_l
+			        pi_1 = 0
+			        boundary = 1
+			        market_share = "None"
+			        boundary_lo = 0
+			        boundary_hi = 0
+			    elif (intersection < 0.25):
+			        # is p2 priced so low as to win the market?
+			        pi_2 = 0
+			        pi_1 = 1 * p2_p
+			        boundary = 0
+			        market_share = "0 to 1"
+			        boundary_lo = 0
+			        boundary_hi = 1
+			      
+			    else:
+			        # else, they share market, 
+			        # find intersection: 
+			        pi_2 = p1_p * intersection
+			        pi_1 = p2_p * (1 - intersection)
+			        boundary = intersection
+			        market_share = str(boundary) + " to 1 "
+			        boundary_lo = intersection
+			        boundary_hi = 1
+
+			p.round_payoff = pi_1 / Constants.num_rounds
+			p.loc = p.participant.vars['loc']
+			p.boundary_lo = boundary_lo
+			p.boundary_hi = boundary_hi
+			p.payoff = pi_1
+
+
 
 
 class Player(BasePlayer):
@@ -84,4 +171,14 @@ class Player(BasePlayer):
 
 	price = models.FloatField(
 		doc="player's price")
+
+	boundary_lo = models.FloatField(
+		doc="player's low end of boundary")
+
+	boundary_hi = models.FloatField(
+		doc="player's high end of boundary")
+
+	round_payoff = models.FloatField(
+		doc="player's payoffs this round")
+
 
