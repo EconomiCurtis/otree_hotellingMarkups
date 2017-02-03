@@ -151,7 +151,7 @@ class Group(BaseGroup):
 			p.loc = p.participant.vars['loc']
 			p.boundary_lo = boundary_lo
 			p.boundary_hi = boundary_hi
-			p.payoff = pi_1
+			p.cumulative_round_payoff = pi_1
 
 
 
@@ -179,6 +179,16 @@ class Player(BasePlayer):
 		doc="player's high end of boundary")
 
 	round_payoff = models.FloatField(
-		doc="player's payoffs this round")
+		doc="player's payoffs this round/subperiod")
+
+	cumulative_round_payoff = models.FloatField(
+		doc="player's payoffs sumulative this round/subperiod. Final round's cumulative_round_payoff is score for this period")
+
+	period_num = models.PositiveIntegerField(
+		doc='''current period number''')
+
+	paid_period = models.IntegerField(
+		doc='''1 if this is a paid period, 0 otherwise''')
+
 
 

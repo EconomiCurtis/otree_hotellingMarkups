@@ -106,6 +106,31 @@ class Results(Page):
         self.round_number == Constants.num_rounds
 
     def vars_for_template(self):
-        pass
+        
+        if 'exp_log' in self.participant.vars: #just error handling
+          exp_log  = self.participant.vars['exp_log']
+        else:
+          exp_log = []
 
-page_sequence = [Intro, WaitPage1, task, WaitPage, Results]
+        # if we don't have a log yet, (that is, we're in round one), then start a new log. 
+        # save info from this round needed to calc final payoffs. 
+
+
+class ShuffleWaitPage(WaitPage):
+    wait_for_all_groups = True
+
+    def is_displayed(self):
+        return self.round_number == Constants.num_rounds
+
+
+    def after_all_players_arrive(self):
+        self.subsession.group_randomly()
+
+
+
+
+
+
+
+
+page_sequence = [Intro, WaitPage1, task, WaitPage, Results, ShuffleWaitPage]

@@ -15,39 +15,46 @@
 .tg  {border-collapse:collapse;border-spacing:0;border:none;margin:0px auto;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
 .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
-.tg .tg-yw4l{vertical-align:top;padding:50px;}
+.tg .tg-top{text-align:left}
+.tg .tg-0ord{text-align:right}
+.tg .tg-lqy6{text-align:right;vertical-align:top}
+.tg .tg-031e{text-align:center}
 </style>
-<table class="tg table-striped">
+<table class="tg">
   <tr>
-    <th class="tg-031e" colspan="2">
-
-        <h2>Subperiod timer: <font color="red"><div style="display: inline" id="countdown"></div></font>
-
-    </th>
-    <th class="tg-031e" style="text-align:right" colspan="2">
-         <h2 >Score so far: {{cumulative_round_payoff|floatformat:"3"}}
-
-    </th>
+    <th class="tg-top" colspan="5" width="500px"><h2>Subperiod timer: <font color="red"><div style="display: inline" id="countdown"></div></font></th>
+    <th class="tg-lqy6" colspan="5" width="500px"><h2 >Period score: {{cumulative_round_payoff|floatformat:"3"}}</th>
   </tr>
-  <tr>
-    <td class="tg-031e" height="500px" width="100px">
-        <div class="input-group slider" data-slider="" style="width:500px;padding:10px;position:relative;">
-        <input type="range" name="price" step="0.01" min="0" max="1" 
-        id="id_price" value={{ my_prev_price }} class="form-control"
-        oninput="sliderChange(this.value)" align="left">
-        <!-- <span class="input-group-addon" data-slider-value="" title="current value">5</span> -->
-        </div>
+</table>
 
+
+
+  <table class="tg">
+  <tr>
+    <td class="tg-031e" colspan="1">
+    </th>
+
+    <td class="tg-031e" colspan="1" width="100px">
+        <input type="range" orient="vertical" name="price" step="0.01" min="0" max="1" 
+        id="id_price" value={{ my_prev_price }} class="form-control" 
+        oninput="sliderChange(this.value)" >
     </td>
-    <td class="tg-031e" colspan="3" width="800px">
+
+    <td class="tg-031l" colspan="1" width="400px">
+    <div id="container2">
          <body onload="draw();">
-           <canvas id="canvas" width="400" height="400" style="padding:0px;" align="left"></canvas>
+           <canvas class="canvas" id="canvas" width="400px" height="400px"></canvas>
          </body>
-
+    </div>
     </td>
-  </tr>
-  <tr>
 
+        <td class="tg-031e" style="text-align:right" colspan="1">
+    </th>
+
+  </tr>
+</table>  
+
+<table class="tg">
     <td class="tg-yw4l" colspan="2" width="50%">
         <h3>Your Price is: <span name="price_text" id="id_price_text">{{ my_prev_price|floatformat:"2" }}</span></h3></h3>
 
@@ -308,20 +315,16 @@ function sliderChange(val){
     return my_p;
 }
 
-    function sliderChange_2(val) {
-        
-        var my_p = (Number(val)).toFixed(2);
-        var my_l = (Number({{my_loc}})).toFixed(2);
-        var other_p = {{other_prev_price}};
-        var other_l = {{other_loc}};
-        var t = 1;
-        var intersection = (Number(val));
-        var market_share = "";
-
-
-
-
-    }
+function sliderChange_2(val) {
+    
+    var my_p = (Number(val)).toFixed(2);
+    var my_l = (Number({{my_loc}})).toFixed(2);
+    var other_p = {{other_prev_price}};
+    var other_l = {{other_loc}};
+    var t = 1;
+    var intersection = (Number(val));
+    var market_share = "";
+}
 
 
 
