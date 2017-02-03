@@ -1,0 +1,42 @@
+{% extends "global/BaseHotMarkup.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Please wait
+{% endblock %}
+
+{% block content %}
+
+{% load otree_tags staticfiles %}
+
+<div class="instructions well well-lg">
+
+    <h2 class="panel-sub-heading">
+        
+    </h2>
+
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'global/matrix.css' %}"/>
+
+
+    <p><br>
+    ...
+    </p>
+    
+    <p>
+    </p>
+
+        <h4 align="right" ><font color="#f4f4f4">
+            t:{{treatment_t}}</font>
+         </h4>
+
+
+</div>
+
+{% if debug %}
+debug mode only 
+    {% next_button %}
+{% endif %}
+
+
+{% endblock %}
