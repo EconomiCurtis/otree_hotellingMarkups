@@ -133,14 +133,24 @@ SESSION_CONFIG_DEFAULTS = {
 
 SESSION_CONFIGS = [
     {
-        'name': 'hotellingmarkup_01',
+        'name': 'hotellingmarkup_01_2p',
         'display_name': "Hotelling Markups - 2 player",
         'num_demo_participants': 2,
         'app_sequence': [
-            'hotellingmarkup_01'
+            'hotellingmarkup_01_2p'
         ],
-        # 'subperiod_time': 300,
-        # 'transport_cost': 1,
+        'subperiod_time': 300,
+        'transport_cost': 1,
+    },
+    {
+        'name': 'hotellingmarkup_01_4p',
+        'display_name': "Hotelling Markups - 4 player",
+        'num_demo_participants': 4,
+        'app_sequence': [
+            'hotellingmarkup_01_4p'
+        ],
+        'subperiod_time': 300,
+        'transport_cost': 1,
     },
 
 
