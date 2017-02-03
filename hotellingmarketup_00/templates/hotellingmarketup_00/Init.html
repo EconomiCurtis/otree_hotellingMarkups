@@ -1,0 +1,43 @@
+{% extends "global/BaseMotherhood.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Introduction
+{% endblock %}
+
+{% block content %}
+
+{% load otree_tags staticfiles %}
+
+<div class="instructions well well-lg">
+
+      <div class="row">
+    <table class="table">
+
+        {% for field in form %}
+        <tr>
+            <td><h4>{% autoescape off %}   {{field.label}}  {% endautoescape %}</td>
+            <td width="50%">
+
+                <p>{{field}}</p>
+                {% if field.errors %}<p class="text-danger"><font color="red">{% autoescape off %} {{field.errors}}{% endautoescape %}</font></p>{% endif %}
+                
+            </td>
+
+        </tr>
+        {% endfor %}
+    </table>
+
+    </div>
+
+</div>
+
+    {% next_button %}<br><br><br>
+
+
+<script type="text/javascript">
+document.getElementById('id_subject_email').focus()
+</script>
+
+{% endblock %}
+

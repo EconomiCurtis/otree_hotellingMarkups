@@ -4,12 +4,21 @@
 
 {% block global_styles  %}
 <style>
-div[class="input-group slider"]{
-    -ms-transform: rotate(270deg); /* IE 9 */
-    -webkit-transform: rotate(270deg); /* Chrome, Safari, Opera */
-    transform: rotate(270deg);
-}
 
+
+
+input[type=range][orient=vertical]
+{
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 10px;
+    height: 400px;
+    padding: 5px 40px;
+}
+canvas{
+/*    width:800px;
+    height:400px;*/
+}
 
 body {
 	background-color: #f7f7f7;

@@ -1,0 +1,30 @@
+{% extends "global/BaseMotherhood.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Please wait
+{% endblock %}
+
+{% block content %}
+
+{% load otree_tags staticfiles %}
+
+<div class="instructions well well-lg">
+        <h2> Please wait</h2>
+
+        <h4 align="right" ><font color="#f4f4f4">
+            f:{% if gender_setting_female %}1{% else %}0{% endif %} - 
+            chrinfo:{%if charityinfo %}1{% else %}0{% endif %} - 
+            heter:{%if homog %}1{% else %}0{% endif %}</font>
+         </h4>
+</div>
+
+<!--     {% next_button %}<br><br><br> -->
+
+
+<script type="text/javascript">
+document.getElementById('id_subject_email').focus()
+</script>
+
+{% endblock %}
+
