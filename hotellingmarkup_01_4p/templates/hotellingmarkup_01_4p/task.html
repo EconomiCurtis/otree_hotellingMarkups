@@ -4,13 +4,13 @@
 
 
 {% block title %}
-    Round {{round}} of {{num_rounds}}
+    Round {{round}}
 {% endblock %}
 
 
 
 {% block content %}
-
+<!--  of {{num_rounds}} -->
 
 <style type="text/css">
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;}
@@ -22,7 +22,7 @@
 </style>
 <table class="tg">
   <tr>
-    <th class="tg-top" colspan="5" width="500px"><h2>Subperiod timer: <font color="red"><div style="display: inline" id="countdown"></div></font></th>
+    <th class="tg-top" colspan="5" width="500px"><h2>Round timer: <font color="red"><div style="display: inline" id="countdown"></div></font></th>
     <th class="tg-lqy6" colspan="5" width="500px"><h2 >Period score: {{cumulative_round_payoff|floatformat:"3"}}</th>
   </tr>
 </table>
@@ -103,7 +103,7 @@ In Debug Mode Only:
 
     </td>
 
-    {% if id_in_group == prev_market_table.0.player_num %}
+    {% if id_in_group == 1 %}
     <td class="tg-curPlayer" colspan="1" width="200px">
     {% else %}
     <td class="tg-yw4l" colspan="1" width="200px">
@@ -127,7 +127,7 @@ In Debug Mode Only:
     </td>
 
 
-    {% if id_in_group == prev_market_table.1.player_num %}
+    {% if id_in_group == 2 %}
     <td class="tg-curPlayer" colspan="1" width="200px">
     {% else %}
     <td class="tg-yw4l" colspan="1" width="200px">
@@ -156,7 +156,7 @@ In Debug Mode Only:
 
 
 
-    {% if id_in_group == prev_market_table.2.player_num %}
+    {% if id_in_group == 3 %}
     <td class="tg-curPlayer" colspan="1" width="200px">
     {% else %}
     <td class="tg-yw4l" colspan="1" width="200px">
@@ -185,7 +185,7 @@ In Debug Mode Only:
 
 
 
-    {% if id_in_group == prev_market_table.3.player_num %}
+    {% if id_in_group == 4 %}
     <td class="tg-curPlayer" colspan="1" width="200px">
     {% else %}
     <td class="tg-yw4l" colspan="1" width="200px">
@@ -496,7 +496,7 @@ function drawFullBox(price, loc_lo, loc_hi, ht, wdt, mrg ){
         x_lo,
         y, 
         x_hi,
-        price * (wdt-2*mrg));    
+        price * (ht-2*mrg));    
     
 }
 
@@ -579,7 +579,7 @@ function draw(my_p_) {
 
     players[{{id_in_group}}-1].price = my_p;
     // update html text stuff
-    document.getElementById('id_price_text').innerHTML = my_p;
+    document.getElementById('id_price_text').innerHTML = (my_p * 100).toFixed(0);
     document.getElementById('id_price_text1').innerHTML = players[0].price;
     document.getElementById('id_price_text2').innerHTML = players[1].price;
     document.getElementById('id_price_text3').innerHTML = players[2].price;
@@ -887,16 +887,18 @@ function draw(my_p_) {
     ctx.fillRect(0,0,wdt,ht);
     ctx.clearRect(mrg,mrg,(wdt-2*mrg),(ht-2*mrg));
 
-    ctx.strokeStyle = "#424242";
-    drawBall(players[0].price,players[0].loc,ht,wdt,mrg);  
-    drawBall(players[1].price,players[1].loc,ht,wdt,mrg);  
-    drawBall(players[2].price,players[2].loc,ht,wdt,mrg);  
-    drawBall(players[3].price,players[3].loc,ht,wdt,mrg);  
   
     drawAction(players[0].price,players[0].loc,ht,wdt,mrg,t);  
     drawAction(players[1].price,players[1].loc,ht,wdt,mrg,t);  
     drawAction(players[2].price,players[2].loc,ht,wdt,mrg,t);  
     drawAction(players[3].price,players[3].loc,ht,wdt,mrg,t);
+
+  ctx.strokeStyle = "#424242";
+    drawBall(players[0].price,players[0].loc,ht,wdt,mrg);  
+    drawBall(players[1].price,players[1].loc,ht,wdt,mrg);  
+    drawBall(players[2].price,players[2].loc,ht,wdt,mrg);  
+    drawBall(players[3].price,players[3].loc,ht,wdt,mrg);  
+  
 
     //draw all players' profit boxes
     // drawBox(players[0].price, players[0].boundary_lo, players[0].boundary_hi, ht, wdt, mrg );

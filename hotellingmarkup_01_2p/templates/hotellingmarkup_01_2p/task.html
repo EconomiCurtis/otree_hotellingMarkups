@@ -4,13 +4,13 @@
 
 
 {% block title %}
-    Round {{round}} of {{num_rounds}}
+    Round {{round}}
 {% endblock %}
-
 
 
 {% block content %}
 
+<!--  of {{num_rounds}} -->
 <style type="text/css">
 .tg  {border-collapse:collapse;border-spacing:0;border:none;margin:0px auto;}
 .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
@@ -22,7 +22,7 @@
 </style>
 <table class="tg">
   <tr>
-    <th class="tg-top" colspan="5" width="500px"><h2>Subperiod timer: <font color="red"><div style="display: inline" id="countdown"></div></font></th>
+    <th class="tg-top" colspan="5" width="500px"><h2>Round timer: <font color="red"><div style="display: inline" id="countdown"></div></font></th>
     <th class="tg-lqy6" colspan="5" width="500px"><h2 >Period score: {{cumulative_round_payoff|floatformat:"3"}}</th>
   </tr>
 </table>
