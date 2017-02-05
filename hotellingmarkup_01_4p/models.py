@@ -10,16 +10,14 @@ from otree.constants import BaseConstants
 from otree.models import BaseSubsession, BaseGroup, BasePlayer
 
 from otree.api import (
-    models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer,
-    Currency as c, currency_range
+	models, widgets, BaseConstants, BaseSubsession, BaseGroup, BasePlayer,
+	Currency as c, currency_range
 )
 import random
-
-
-
-
 # </standard imports>
 
+def mean(numbers):
+    return float(sum(numbers)) / max(len(numbers), 1)
 
 
 author = 'Curtis Kephart'
@@ -29,44 +27,81 @@ doc = """
 """
 
 class Constants(BaseConstants):
-    name_in_url = 'task_a_4'
-    subperiod_time = 5 #see Subsession, before_session_starts setting. 
-    num_rounds = 25
-    players_per_group = 4
-    transport_cost = 1
+	name_in_url = 'task_a_4'
+	subperiod_time = 5 #see Subsession, before_session_starts setting. 
+	num_rounds = 36
+	players_per_group = 4
+	transport_cost = 1
+	p1_loc = 0.245
+	p2_loc = 0.255
+	p3_loc = 0.745
+	p4_loc = 0.755
+	paid_period = False
 
 class Subsession(BaseSubsession):
 
 	def before_session_starts(self):
 
 		# randomize groups, and placement in groups
-		self.group_randomly()
+		if ((self.round_number == None) | (self.round_number == 1)):
+			self.group_randomly()
 
 
 		# how long is the real effort task time? 
 		# refer to settings.py settings. 
 		for p in self.get_players():
-			if 'subperiod_time' in self.session.config:
-			    p.subperiod_time = self.session.config['subperiod_time']
+
+			if 'paid_period' in self.session.config:
+				p.paid_period = p.participant.vars['paid_period'] = self.session.config['paid_period']
+
 			else:
-			    p.subperiod_time = Constants.task_timer
+				p.paid_period = p.participant.vars['paid_period'] = Constants.paid_period
+
+			if 'p1_loc' in self.session.config:
+				p.participant.vars['p1_loc'] = self.session.config['p1_loc']
+			else:
+				p.participant.vars['p1_loc'] = Constants.p1_loc
+
+			if 'p2_loc' in self.session.config:
+				p.participant.vars['p2_loc'] = self.session.config['p2_loc']
+			else:
+				p.participant.vars['p2_loc'] = Constants.p2_loc
+
+			if 'p3_loc' in self.session.config:
+				p.participant.vars['p3_loc'] = self.session.config['p3_loc']
+			else:
+				p.participant.vars['p3_loc'] = Constants.p3_loc
+
+			if 'p4_loc' in self.session.config:
+				p.participant.vars['p4_loc'] = self.session.config['p4_loc']
+			else:
+				p.participant.vars['p4_loc'] = Constants.p4_loc
+
+
+			if 'subperiod_time' in self.session.config:
+				p.subperiod_time = self.session.config['subperiod_time']
+			else:
+				p.subperiod_time = Constants.task_timer
 
 			if 'transport_cost' in self.session.config:
-			    p.transport_cost = self.session.config['transport_cost']
+				p.transport_cost = self.session.config['transport_cost']
 			else:
-			    p.transport_cost = Constants.transport_cost
+				p.transport_cost = Constants.transport_cost
+
 
 			if self.round_number == 1: 
 				p.price = random.uniform(0, 1)
 
 				#set loc based on player id
 				if p.id_in_group == 1: 
-					p.loc = p.participant.vars["loc"] = 0.245
+					p.loc = p.participant.vars["loc"] = p.participant.vars['p1_loc']
 				elif p.id_in_group == 2: 
-					p.loc = p.participant.vars["loc"] = 0.255
+					p.loc = p.participant.vars["loc"] = p.participant.vars['p2_loc']
 				elif p.id_in_group == 3: 
-					p.loc = p.participant.vars["loc"] = 0.745
-				else: p.loc = p.participant.vars["loc"] = 0.755
+					p.loc = p.participant.vars["loc"] = p.participant.vars['p3_loc']
+				else: p.loc = p.participant.vars["loc"] = p.participant.vars['p4_loc']
+
+
 
 
 class Group(BaseGroup):
@@ -80,82 +115,194 @@ class Group(BaseGroup):
 			if p.price == None:
 				p.price = p.in_round(self.round_number-1).price
 
-			# loc variable setup
-			if p.participant.vars['loc'] == 0.25:
-				p1_l = 0.25
+			# variable setup
+			if p.id_in_group == 1:
+				p1_l = p.loc = p.participant.vars['loc']
 				p1_p = p.price
-			elif p.participant.vars['loc'] == 0.75:
-				p2_l = 0.75
+			elif p.id_in_group == 2:
+				p2_l = p.loc = p.participant.vars['loc']
 				p2_p = p.price
+			elif p.id_in_group == 3:
+				p3_l = p.loc = p.participant.vars['loc']
+				p3_p = p.price
+			elif p.id_in_group == 4:
+				p4_l = p.loc = p.participant.vars['loc']
+				p4_p = p.price
 
 			t = p.transport_cost
 
 
+
+		# //p1 - priced out of market
+		intersection_1_2 = (t * p2_l+p2_p + t * p1_l - p1_p) / (2*t)
+		intersection_1_3 = (t * p3_l+p3_p + t * p1_l - p1_p) / (2*t)
+		intersection_1_4 = (t * p4_l+p4_p + t * p1_l - p1_p) / (2*t)
+
+		if ((intersection_1_2 < p1_l) | (intersection_1_3 < p1_l) | (intersection_1_4 < p1_l)):
+			p1_boundary_lo = 0 
+			p1_boundary_hi = 0 
+
+		# //p4 - priced out of market
+		intersection_1_4 = (t *p4_l+p4_p + t * p1_l - p1_p) / (2*t)
+		intersection_2_4 = (t *p4_l+p4_p + t * p2_l - p2_p) / (2*t)
+		intersection_3_4 = (t *p4_l+p4_p + t * p3_l - p3_p) / (2*t)
+
+		if ((intersection_3_4 > p4_l) | (intersection_2_4 > p4_l) | (intersection_1_4 > p4_l)):
+			p4_boundary_lo = 0 
+			p4_boundary_hi = 0 
+
+		# //p2 - priced out of market
+		intersection_1_2 = (t *p2_l+p2_p + t * p1_l - p1_p) / (2*t)
+		intersection_2_3 = (t *p3_l+p3_p + t * p2_l - p2_p) / (2*t)
+		intersection_2_4 = (t *p4_l+p4_p + t * p2_l - p2_p) / (2*t)
+
+		if ((intersection_1_2 > p2_l) | (intersection_2_3 < p2_l) | (intersection_2_4 < p2_l)):
+			p2_boundary_lo = 0 
+			p2_boundary_hi = 0
+
+		# //p3 - priced out of market
+		intersection_1_3 = (t *p3_l+p3_p + t * p1_l - p1_p) / (2*t)
+		intersection_2_3 = (t *p3_l+p3_p + t * p2_l - p2_p) / (2*t)
+		intersection_3_4 = (t *p4_l+p4_p + t * p3_l - p3_p) / (2*t)
+
+		if ((intersection_1_3 > p3_l) | (intersection_2_3 > p3_l) | (intersection_3_4 < p3_l)):
+			p3_boundary_lo = 0 
+			p3_boundary_hi = 0 
+
+
+
+		# //p1
+		if ((intersection_1_2 < p1_l) | (intersection_1_3 < p1_l) | (intersection_1_4 < p1_l)):
+			p1_boundary_lo = 0 
+			p1_boundary_hi = 0 
+		elif (intersection_1_2 > p2_l):
+			if (intersection_1_3 > p3_l):
+				if (intersection_1_4 > p4_l): #//prices below all else
+					p1_boundary_lo = 0 
+					p1_boundary_hi = 1 
+				else:
+					p1_boundary_lo = 0 
+					p1_boundary_hi = intersection_1_4
+			elif (intersection_1_4 < intersection_1_3): # // if p4 priced out p3!
+				p1_boundary_lo = 0 
+				p1_boundary_hi = intersection_1_4 
+			else:
+				p1_boundary_lo = 0 
+				p1_boundary_hi = intersection_1_3 
+		elif ((intersection_1_4 < intersection_1_3) & (intersection_1_4 < intersection_1_2)):
+				p1_boundary_lo = 0 
+				p1_boundary_hi = intersection_1_4 
+		elif (intersection_1_3 < intersection_1_2):
+				p1_boundary_lo = 0 
+				p1_boundary_hi = intersection_1_3 
+		else:
+			p1_boundary_lo = 0 
+			p1_boundary_hi = intersection_1_2
+
+
+		# //p4
+		if ((intersection_3_4 > p4_l) | (intersection_2_4 > p4_l) | (intersection_1_4 > p4_l)):
+			p4_boundary_lo = 0 
+			p4_boundary_hi = 0 
+		elif (intersection_3_4 < p3_l):
+			if (intersection_2_4 < p2_l):
+				if (intersection_1_4 < p1_l): #//prices below all else
+					p4_boundary_lo = 0 
+					p4_boundary_hi = 1 
+				else:
+					p4_boundary_lo = intersection_1_4 
+					p4_boundary_hi = 1 
+			elif (intersection_1_4 > intersection_2_4): #// if p4 priced out p3!
+					p4_boundary_lo = intersection_1_4 
+					p4_boundary_hi = 1 
+			else:
+				p4_boundary_lo = intersection_2_4 
+				p4_boundary_hi = 1
+		elif ((intersection_1_4 > intersection_2_4) & (intersection_1_4 > intersection_3_4)):
+				p4_boundary_lo = intersection_1_4 
+				p4_boundary_hi = 1 
+		elif (intersection_2_4 > intersection_3_4):
+				p4_boundary_lo = intersection_2_4 
+				p4_boundary_hi = 1 
+		else:
+			p4_boundary_lo = intersection_3_4 
+			p4_boundary_hi = 1 
+
+
+		# //p2
+		intersection_1_2 = (t *p2_l+p2_p + t * p1_l - p1_p) / (2*t)
+		intersection_2_3 = (t *p3_l+p3_p + t * p2_l - p2_p) / (2*t)
+		intersection_2_4 = (t *p4_l+p4_p + t * p2_l - p2_p) / (2*t)
+
+		if ((intersection_1_2 > p2_l) | (intersection_2_3 < p2_l) | (intersection_2_4 < p2_l)):
+			p2_boundary_lo = 0 
+			p2_boundary_hi = 0 
+		else:
+			# //p2 left side
+			if (intersection_1_2 >= p1_l):
+				p2_boundary_lo = intersection_1_2
+			elif (intersection_1_2 < p1_l):
+				p2_boundary_lo = 0
+
+			# p2 right side
+			if (intersection_2_3 > p3_l):
+				if (intersection_2_4 > p4_l):
+					p2_boundary_hi = 1
+				else:
+					p2_boundary_hi = intersection_2_4
+			elif (intersection_2_4 < intersection_2_3):
+				p2_boundary_hi = intersection_2_4
+			else:
+				p2_boundary_hi = intersection_2_3
+
+
+		# //p3
+		intersection_1_3 = (t *p3_l+p3_p + t * p1_l - p1_p) / (2*t)
+		intersection_2_3 = (t *p3_l+p3_p + t * p2_l - p2_p) / (2*t)
+		intersection_3_4 = (t *p4_l+p4_p + t * p3_l - p3_p) / (2*t)
+
+		if ((intersection_1_3 > p3_l) | (intersection_2_3 > p3_l) | (intersection_3_4 < p3_l)):
+			p3_boundary_lo = 0 
+			p3_boundary_hi = 0 
+		else:
+			# //p3 left side
+			if (intersection_2_3 < p2_l):
+				if (intersection_1_3 < p1_l):
+					p3_boundary_lo = 0
+				else:
+					p3_boundary_lo = intersection_1_3
+			elif (intersection_1_3 > intersection_2_3):
+				p3_boundary_lo = intersection_1_3
+			else:
+				p3_boundary_lo = intersection_2_3
+
+			# // p3 right side
+			if (intersection_3_4 <= p4_l):
+				p3_boundary_hi = intersection_3_4
+			elif (intersection_3_4 > p4_l):
+				p3_boundary_hi = 1
+
+
 		for p in self.get_players():
 
-			# payoffs conditional on player type.
-			# Calc payoff info 
-			if (p.participant.vars['loc'] == 0.25):
-			    intersection = ((t * p2_l) + p2_p + (t * p1_l) - p1_p) / (2*t)
-			    if (intersection > 0.75):
-			        pi_1 = 1 * p1_p
-			        pi_2 = 0
-			        boundary = 1
-			        market_share = "0 to 1"
-			        boundary_lo = 0
-			        boundary_hi = 1
-			    elif (intersection < 0.25):
-			        # is p2 priced so low as to win the market?
-			        pi_1 = 0
-			        pi_2 = 1 * p2_p
-			        boundary = 0
-			        market_share = "None"
-			        boundary_lo = 0
-			        boundary_hi = 0 
-			    else:
-			        # else, they share market, 
-			        # find intersection: 
-			        pi_1 = p1_p * intersection
-			        pi_2 = p2_p * (1 - intersection)
-			        boundary = intersection
-			        market_share =  "0 to " + str(boundary)
-			        boundary_lo = 0
-			        boundary_hi = intersection
-
-			if (p.participant.vars['loc'] == 0.75):
-			    #if I am player2:
-			    intersection = ((t*p2_l) + p2_p + (t * p1_l) - p1_p) / (2*t)
-			    if (intersection > 0.75):
-			        pi_2 = 1 * p1_l
-			        pi_1 = 0
-			        boundary = 1
-			        market_share = "None"
-			        boundary_lo = 0
-			        boundary_hi = 0
-			    elif (intersection < 0.25):
-			        # is p2 priced so low as to win the market?
-			        pi_2 = 0
-			        pi_1 = 1 * p2_p
-			        boundary = 0
-			        market_share = "0 to 1"
-			        boundary_lo = 0
-			        boundary_hi = 1
-			      
-			    else:
-			        # else, they share market, 
-			        # find intersection: 
-			        pi_2 = p1_p * intersection
-			        pi_1 = p2_p * (1 - intersection)
-			        boundary = intersection
-			        market_share = str(boundary) + " to 1 "
-			        boundary_lo = intersection
-			        boundary_hi = 1
-
-			p.round_payoff = pi_1 / Constants.num_rounds
-			p.loc = p.participant.vars['loc']
-			p.boundary_lo = boundary_lo
-			p.boundary_hi = boundary_hi
-			p.cumulative_round_payoff = pi_1
+			# variable setup
+			if p.id_in_group == 1:
+				p.boundary_lo = p1_boundary_lo
+				p.boundary_hi = p1_boundary_hi
+			elif p.id_in_group == 2:
+				p.boundary_lo = p2_boundary_lo
+				p.boundary_hi = p2_boundary_hi
+			elif p.id_in_group == 3:
+				p.boundary_lo = p3_boundary_lo
+				p.boundary_hi = p3_boundary_hi
+			elif p.id_in_group == 4:
+				p.boundary_lo = p4_boundary_lo
+				p.boundary_hi = p4_boundary_hi
+				
+			p.market_share = p.boundary_hi - p.boundary_lo
+			p.round_payoff = p.market_share * p.price
+			p.period_num = p.round_number
+			p.cumulative_round_payoff = sum([ply.round_payoff / Constants.num_rounds for ply in p.in_all_rounds() if (ply.round_payoff != None)])
 
 
 
@@ -163,11 +310,11 @@ class Group(BaseGroup):
 class Player(BasePlayer):
 
 	subperiod_time = models.PositiveIntegerField(
-	    doc="""The length of the real effort task timer."""
+		doc="""The length of the real effort task timer."""
 	)
 
 	transport_cost = models.PositiveIntegerField(
-	    doc="""transport cost"""
+		doc="""transport cost"""
 	)
 
 	loc = models.FloatField(
@@ -182,6 +329,9 @@ class Player(BasePlayer):
 	boundary_hi = models.FloatField(
 		doc="player's high end of boundary")
 
+	market_share = models.FloatField(
+		doc='''size of player's market''')
+
 	round_payoff = models.FloatField(
 		doc="player's payoffs this round/subperiod")
 
@@ -191,8 +341,8 @@ class Player(BasePlayer):
 	period_num = models.PositiveIntegerField(
 		doc='''current period number''')
 
-	paid_period = models.IntegerField(
-		doc='''1 if this is a paid period, 0 otherwise''')
+	paid_period = models.BooleanField(
+		doc='''1/True if this is a paid period, 0/False otherwise''')
 
 
 
