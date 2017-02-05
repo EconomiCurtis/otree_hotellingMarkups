@@ -25,10 +25,13 @@ class Intro(Page):
         return {
             'round':self.round_number,
             'my_loc':self.participant.vars["loc"],
-            'other_loc':self.player.get_others_in_group()[0].participant.vars["loc"],
             'treatment_t':self.player.transport_cost,
             'debug':settings.DEBUG,
-
+            'p1_loc':self.participant.vars['p1_loc'],
+            'p2_loc':self.participant.vars['p2_loc'],
+            'p3_loc':self.participant.vars['p3_loc'],
+            'p4_loc':self.participant.vars['p4_loc'],
+            'paid_period':self.player.paid_period,
         }
 
 class WaitPage1(WaitPage):
@@ -74,19 +77,19 @@ class task(Page):
             cumulative_round_payoff = sum([p.round_payoff for p in self.player.in_all_rounds() if (p.round_payoff != None)])
          
         else:
-            for plyr in self.group.get_players().in_round(self.round_number-1):
+            for plyr in self.group.get_players():
                 player_data = {
-                    'player_num':plyr.id_in_group,
-                    'loc':plyr.loc,
-                    'price':plyr.price,
-                    'cumulative_round_payoff':um([p.round_payoff for p in plyr.in_all_rounds() if (p.round_payoff != None)]),
+                    'player_num':plyr.in_round(self.round_number-1).id_in_group,
+                    'loc':plyr.in_round(self.round_number-1).loc,
+                    'price':plyr.in_round(self.round_number-1).price,
+                    'cumulative_round_payoff':sum([p.round_payoff for p in plyr.in_all_rounds() if (p.round_payoff != None)]),
                 }
                 prev_market_table.append(player_data)
 
             # this player's data.             
             my_prev_price = self.player.in_round(self.round_number-1).price #else pull price from previous round. 
             other_prev_price = self.player.get_others_in_group()[0].in_round(self.round_number-1).price
-            cumulative_round_payoff = sum([p.round_payoff for p in self.player.in_all_rounds() if (p.round_payoff != None)])
+            cumulative_round_payoff = sum([(p.round_payoff / Constants.num_rounds) for p in self.player.in_all_rounds() if (p.round_payoff != None)])
          
         return {
             'id_in_group':self.player.id_in_group,
@@ -96,7 +99,7 @@ class task(Page):
             'num_rounds':Constants.num_rounds,
             'my_loc':self.participant.vars['loc'],
             'my_prev_price':my_prev_price,
-            'cumulative_round_payoff':cumulative_round_payoff,
+            'cumulative_round_payoff':round(cumulative_round_payoff * 100, 3),
             'prev_market_table':prev_market_table,
             'debug':settings.DEBUG,
         }
