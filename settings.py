@@ -139,6 +139,7 @@ SESSION_CONFIGS = [
         'app_sequence': [
             'hotellingmarkup_01_2p'
         ],
+        'paid_period':True,
         'subperiod_time': 300,
         'transport_cost': 1,
     },
@@ -149,8 +150,13 @@ SESSION_CONFIGS = [
         'app_sequence': [
             'hotellingmarkup_01_4p'
         ],
-        'subperiod_time': 300,
+        'paid_period':True,
+        'subperiod_time': 60,
         'transport_cost': 1,
+        'p1_loc':0.245,
+        'p2_loc':0.255,
+        'p3_loc':0.745,
+        'p4_loc':0.755,
     },
 
 
