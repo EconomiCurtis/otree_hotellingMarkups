@@ -1,0 +1,414 @@
+{% extends "global/BaseHotMarkup.html" %}
+{% load staticfiles otree_tags %}
+{% load multiply %}
+
+
+{% block title %}
+    Round {{round}}
+{% endblock %}
+
+
+{% block content %}
+
+<!--  of {{num_rounds}} -->
+<style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border:none;margin:0px auto;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;}
+.tg .tg-top{text-align:left}
+.tg .tg-0ord{text-align:right}
+.tg .tg-lqy6{text-align:right;vertical-align:top}
+.tg .tg-031e{text-align:center}
+</style>
+<table class="tg">
+  <tr>
+    <th class="tg-top" colspan="5" width="500px"><h2>Round timer: <font color="red"><div style="display: inline" id="countdown"></div></font></th>
+    <th class="tg-lqy6" colspan="5" width="500px"><h2 >Period score: {{cumulative_round_payoff|floatformat:"2"}}</th>
+  </tr>
+</table>
+
+
+
+  <table class="tg">
+  <tr>
+    <td class="tg-031e" colspan="1">
+    </td>
+
+    <td class="tg-031e" colspan="1" width="100px">
+        <input type="range" orient="vertical" name="price" step="0.01" min="0" max="1" 
+        id="id_price" value={{ my_prev_price }} class="form-control" 
+        oninput="sliderChange(this.value)" >
+    </td>
+
+    <td class="tg-031l" colspan="1" width="400px">
+    <div id="container2">
+         <body onload="draw();">
+           <canvas class="canvas" id="canvas" width="400px" height="400px"></canvas>
+         </body>
+    </div>
+    </td>
+
+    <td class="tg-031e" style="text-align:right" colspan="1"></td>
+    </td>
+
+  </tr>
+  
+
+  <tr>
+    <td class="tg-031e" colspan="1">
+    </td>
+
+    <td class="tg-031e" colspan="1" width="100px">
+        <h2><span name="price_text" id="id_price_text_0">{{ my_prev_price|floatformat:"2" }}</span></h2>
+    </td>
+
+    <td class="tg-031l" colspan="1" width="400px">
+  
+    </div>
+    </td>
+
+    <td class="tg-031e" style="text-align:right" colspan="1"></td>
+    </td>
+
+  </tr>
+
+
+
+</table>  
+
+    {% if debug %}
+    in debug mode only:
+<table class="tg">
+    <td class="tg-yw4l" colspan="2" width="50%">
+        <h3>Your Price is: <span name="price_text" id="id_price_text">{{ my_prev_price|floatformat:"2" }}</span></h3>
+
+        <h3>Your Location is: {{my_loc}}            
+
+        <h3>My market boundry is <span name="price_text" id="id_market_boundary_text">...</span></h3>
+
+        <h3>My market share <span name="market_share" id="id_market_share">...</span></h3>
+
+        <h3>My profit is: <span name="profit_text" id="id_profit_text">...</span></h3>
+    </td>
+
+    <td class="tg-yw4l" colspan="2"  width="50%">
+        <h3>Counterparty's Price: {{other_prev_price|floatformat:"2" }}</h3>
+        <h3>Counterparty's Location: {{other_loc}} </h3>
+        <h3>Counterparty's Profit: <span name="other_profit_text" id="id_other_profit_text">...</span></h3>
+        <h3>Intersection: <span name="Intersection" id="id_Intersection">...</span></h3>
+
+    </td>
+  </tr>
+  <tr>
+    <td class="tg-yw4l" colspan="2"></td>
+    <td class="tg-yw4l" colspan="2"></td>
+  </tr>
+</table>  
+
+
+
+    {% endif %}
+
+
+<input class="btn btn-primary btn-large btn-primary next-button" type="submit" value="Next"  style=" visibility:hidden;">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+</script>
+
+<script>
+var mybtn = document.querySelectorAll('.btn');
+var i = 0;
+
+var timer = setInterval(function() {
+     if( i < mybtn.length) {
+         mybtn[i].click();
+         console.log("Click handler for button " + i + " fired");
+     } else {
+         clearInterval(timer);
+     }
+     i = i + 1;
+}, ({{subperiod_timer}} * 1000));
+</script>
+
+<script>
+function drawFullBall( price, loc, ht, wdt, mrg ) {
+
+    var ctx = canvas.getContext('2d');
+    var x = (mrg + ((wdt-2*mrg)) * loc); // y coord for p1
+    var y = mrg + (ht-2*mrg) * (1 - price); // x coord for p1
+
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.setLineDash([0,0]); 
+    ctx.beginPath();
+    ctx.moveTo((x + 7), y);
+    ctx.arc(x, y, 7,0,Math.PI*2,true);  // eye
+    ctx.fillStyle = 'blue';
+    ctx.fill();
+    ctx.stroke();
+    ctx.fillStyle = 'black';
+    
+}
+
+
+function draw(my_p_) {
+    //seperate this into static and dynamic components. 
+  var canvas = document.getElementById('canvas');
+  if (canvas.getContext){
+
+    // setup variables
+    var my_p = {{ my_prev_price}};
+    if (my_p_ != undefined) {
+        my_p = Number(my_p_).toFixed(2);
+    }  
+    var my_l = Number({{my_loc}}).toFixed(2);
+    var other_p = Number({{other_prev_price}}).toFixed(2);
+    var other_l = Number({{other_loc}}).toFixed(2);
+    var t = Number({{transport_cost}});
+    var intersection = Number(my_p_);
+    var market_share = "";
+
+    // Calc payoff info 
+    if (my_l == 0.25){
+        intersection = (t *Number(other_l)+Number(other_p) + t * Number(my_l) - Number(my_p)) / (2*t);
+        if (intersection > 0.75) {
+            pi_1 = 1 * my_p;
+            pi_2 = 0;
+            boundary = 1;
+            market_share = "0 to 1";
+            boundary_lo = 0;
+            boundary_hi = 1;
+          } else if (intersection < 0.25){
+            // # is p2 priced so low as to win the market?
+            pi_1 = 0;
+            pi_2 = 1 * other_p;
+            boundary = 0;
+            market_share = "None";
+            boundary_lo = 0;
+            boundary_hi = 0; 
+          } else {
+            // # else, they share market, 
+            // # find intersection: 
+            pi_1 = my_p * intersection;
+            pi_2 = other_p * (1 - intersection);
+            boundary = intersection;
+            market_share =  "0 to " + boundary.toFixed(2);
+            boundary_lo = 0;
+            boundary_hi = intersection; 
+          }
+
+    }
+
+    if (my_l == 0.75){
+        // if I am player2:
+        intersection = (t*Number(my_l) + Number(my_p) + t * Number(other_l) - Number(other_p)) / (2*t);
+        if (intersection > 0.75) {
+            pi_2 = 1 * Number(other_l);
+            pi_1 = 0;
+            boundary = 1;
+            market_share = "None";
+            boundary_lo = 0;
+            boundary_hi = 0;
+          } else if (intersection < 0.25){
+            // # is p2 priced so low as to win the market?
+            pi_2 = 0;
+            pi_1 = 1 * Number(my_p);
+            boundary = 0;
+            market_share = "0 to 1";
+            boundary_lo = 0;
+            boundary_hi = 1;
+          
+          } else {
+            // # else, they share market, 
+            // # find intersection: 
+            pi_2 = Number(other_p) * intersection;
+            pi_1 = Number(my_p) * (1 - intersection);
+            boundary = intersection;
+            market_share = boundary.toFixed(2) + " to 1 ";
+            boundary_lo = intersection;
+            boundary_hi = 1;
+            }
+    }
+
+
+
+
+
+    var ctx = canvas.getContext('2d');
+
+    var wdt = 400; //size of box
+    var mrg = 15;
+
+    // background
+    ctx.strokeStyle = "#000000";
+    ctx.fillRect(0,0,wdt,wdt);
+    ctx.clearRect(mrg,mrg,(wdt-2*mrg),(wdt-2*mrg));
+
+
+    if (my_l == 0.75){
+        var p1_l = 0.25,
+            p1_p = other_p,
+            p2_l = 0.75,
+            p2_p = my_p;
+    } else {
+        var p1_l = 0.25,
+            p1_p = my_p,
+            p2_l = 0.75,
+            p2_p = other_p;
+            
+    }
+
+    var p1_x = (mrg + ((wdt-2*mrg)) * p1_l); // y coord for p1
+    var p1_y = mrg + (wdt-2*mrg) - ((wdt-2*mrg) * p1_p); // x coord for p1
+    var p2_x = (mrg + ((wdt-2*mrg)) * p2_l); // y coord for p2
+    var p2_y = mrg + (wdt-2*mrg) - ((wdt-2*mrg) * p2_p); // x coord for p2
+    
+    // draw profit area 
+    // see payoff cal section
+    ctx.fillStyle = "rgba(165, 192, 255,0.25)";
+    if (my_l == 0.75){
+        ctx.fillRect(
+            mrg + boundary_lo * (wdt-2*mrg),
+            p2_y, 
+            (wdt-2*mrg)*(boundary_hi-boundary_lo),
+            p2_p * (wdt-2*mrg));
+    } else {
+        ctx.fillRect(
+            mrg + boundary_lo * (wdt-2*mrg), 
+            p1_y, 
+            (wdt-2*mrg)*(boundary_hi-boundary_lo), 
+            my_p * (wdt-2*mrg));
+            
+    }
+    ctx.fillStyle = "#2d2d2d"; 
+
+    // p1 
+    ctx.setLineDash([0,0]); // no dashed lines
+    ctx.strokeStyle = "#424242";
+
+    ctx.beginPath();
+    ctx.moveTo((p1_x + 5), p1_y);
+    ctx.arc(p1_x, p1_y, 5,0,Math.PI*2,true);  // Left eye
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(p2_x + 5, p2_y);
+    ctx.arc(p2_x,p2_y,5,0,Math.PI*2,true);  // Right eye
+    ctx.stroke();
+
+    // draw transport cost lines
+    // p1 trans cost
+    ctx.strokeStyle = "#ada9a9"; 
+    ctx.setLineDash([0,0]); // no dashed lines
+    ctx.beginPath();
+    ctx.moveTo((p1_x), p1_y);
+    ctx.lineTo(wdt-mrg, p1_y - t * (1 - p1_l) * (wdt-2*mrg));
+    ctx.moveTo((p1_x), p1_y);
+    ctx.lineTo(mrg, p1_y - t * (p1_l) * (wdt-2*mrg));
+    ctx.stroke();
+
+    //p2 trans cost
+    ctx.strokeStyle = "#ada9a9"; 
+    ctx.setLineDash([0,0]); // no dashed lines
+    ctx.beginPath();
+    ctx.moveTo((p2_x), p2_y);
+    ctx.lineTo(mrg, p2_y - t * (p2_l) * (wdt-2*mrg));
+    ctx.moveTo((p2_x), p2_y);
+    ctx.lineTo(wdt-mrg, p2_y - t * (1-p2_l) * (wdt-2*mrg));
+    ctx.stroke();
+
+    // boundary/intersection line
+    ctx.strokeStyle = "#ada9a9"; 
+    ctx.beginPath();
+    ctx.setLineDash([10, 5]);//dashed lines    
+    ctx.moveTo((mrg + ((wdt-2*mrg) * boundary)), mrg);
+    ctx.lineTo((mrg + ((wdt-2*mrg) * boundary)), mrg+wdt);
+    ctx.stroke();
+
+    drawFullBall( my_p, my_l, wdt, wdt, mrg );
+
+
+
+    // update html text stuff
+    document.getElementById('id_price_text_0').innerHTML = (my_p*100).toFixed(0);
+    document.getElementById('id_price_text').innerHTML = my_p;
+    document.getElementById('id_Intersection').innerHTML = intersection.toFixed(3);
+    document.getElementById('id_market_boundary_text').innerHTML = boundary.toFixed(3);
+    document.getElementById('id_profit_text').innerHTML = pi_1.toFixed(3);
+    document.getElementById('id_other_profit_text').innerHTML = pi_2.toFixed(3);
+    document.getElementById('id_market_share').innerHTML = market_share;
+
+
+    
+  }
+
+}
+
+function sliderChange(val){
+    var my_p = {{ my_prev_price}};
+    if (val != undefined) {
+        my_p = (Number(val)).toFixed(2);
+    }     
+    sliderChange_2(my_p);
+    draw(my_p);
+    return my_p;
+}
+
+function sliderChange_2(val) {
+    
+    var my_p = (Number(val)).toFixed(2);
+    var my_l = (Number({{my_loc}})).toFixed(2);
+    var other_p = {{other_prev_price}};
+    var other_l = {{other_loc}};
+    var t = 1;
+    var intersection = (Number(val));
+    var market_share = "";
+}
+
+
+
+</script>
+
+<!-- Countdown timer -->
+<script>
+    function countdown( elementName, minutes, seconds )
+    {
+        var element, endTime, hours, mins, msLeft, time;
+
+        function twoDigits( n )
+        {
+            return (n <= 9 ? "0" + n : n);
+        }
+
+        function updateTimer()
+        {
+            msLeft = endTime - (+new Date);
+            if ( msLeft < 1000 ) {
+                element.innerHTML = "0";
+            } else {
+                time = new Date( msLeft );
+                hours = time.getUTCHours();
+                mins = time.getUTCMinutes();
+                element.innerHTML = (hours ? hours + ':' + twoDigits( mins ) : mins) + ':' + twoDigits( time.getUTCSeconds() );
+                setTimeout( updateTimer, time.getUTCMilliseconds() + 500 );
+            }
+        }
+
+        element = document.getElementById( elementName );
+        endTime = (+new Date) + 1000 * (60*minutes + seconds) + 500;
+        updateTimer();
+    }
+
+    countdown( "countdown", 0, {{subperiod_timer}});
+    countdown( "countdown2", 100, 0 );
+ </script>
+
+{% endblock %}

@@ -91,6 +91,25 @@ class task(Page):
             other_prev_price = self.player.get_others_in_group()[0].in_round(self.round_number-1).price
             cumulative_round_payoff = sum([(p.round_payoff / Constants.num_rounds) for p in self.player.in_all_rounds() if (p.round_payoff != None)])
          
+        # log scores, if final subperiod
+        # if we don't have a log yet, (that is, we're in period one), then start a new log. 
+        # save info from this round needed to calc final payoffs. 
+        if self.round_number == (Constants.num_rounds):
+            if 'exp_log' in self.participant.vars: #just error handling
+              exp_log  = self.participant.vars['exp_log']
+            else:
+              exp_log = []
+
+
+            row = {
+                'period_num':len(exp_log) + 1,
+                'period_score':round(cumulative_round_payoff * 100,6),
+                'paid_period':True,
+            }
+            exp_log.append(row)
+            self.participant.vars['exp_log'] = exp_log
+
+
         return {
             'id_in_group':self.player.id_in_group,
             'subperiod_timer':subperiod_timer,
@@ -101,7 +120,7 @@ class task(Page):
             'my_prev_price':my_prev_price,
             'cumulative_round_payoff':round(cumulative_round_payoff * 100, 3),
             'prev_market_table':prev_market_table,
-            'debug':settings.DEBUG,
+            'debug':False, #settings.DEBUG,
         }
 
 
@@ -112,25 +131,17 @@ class WaitPage(WaitPage):
         self.group.set_payoffs() 
 
 
-class ResultsWaitPage(WaitPage):
-    def is_displayed(self):
-        return self.round_number == Constants.num_rounds
-    def after_all_players_arrive(self):
-        pass
-        # for p in self.group.get_players():
-        #     p.set_payoff()
-
-
 class Results(Page):
     def is_displayed(self):
-        self.round_number == Constants.num_rounds
+        return self.round_number == Constants.num_rounds
 
     def vars_for_template(self):
-        
-        if 'exp_log' in self.participant.vars: #just error handling
-          task_1_score  = self.participant.vars['exp_log']
-        else:
-          task_1_score = dict()
+
+        return{
+            'debug':settings.DEBUG,
+            'cumulative_round_payoff':round(self.player.cumulative_round_payoff * 100, 3),
+            'exp_log':self.participant.vars['exp_log'],
+        }
 
 
 

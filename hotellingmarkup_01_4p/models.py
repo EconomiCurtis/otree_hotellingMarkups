@@ -46,6 +46,10 @@ class Subsession(BaseSubsession):
 		if ((self.round_number == None) | (self.round_number == 1)):
 			self.group_randomly()
 
+			if 'period_number' in self.session.config:
+				self.session.config['period_number'] = self.session.config['period_number'] + 1
+			else: 
+				self.session.config['period_number'] = 1
 
 		# how long is the real effort task time? 
 		# refer to settings.py settings. 
@@ -303,11 +307,15 @@ class Group(BaseGroup):
 			p.round_payoff = p.market_share * p.price
 			p.period_num = p.round_number
 			p.cumulative_round_payoff = sum([ply.round_payoff / Constants.num_rounds for ply in p.in_all_rounds() if (ply.round_payoff != None)])
-
+			p.period_number = self.session.config['period_number']
 
 
 
 class Player(BasePlayer):
+
+	period_number = models.PositiveIntegerField(
+		doc='''period number'''
+	)
 
 	subperiod_time = models.PositiveIntegerField(
 		doc="""The length of the real effort task timer."""
@@ -337,9 +345,6 @@ class Player(BasePlayer):
 
 	cumulative_round_payoff = models.FloatField(
 		doc="player's payoffs sumulative this round/subperiod. Final round's cumulative_round_payoff is score for this period")
-
-	period_num = models.PositiveIntegerField(
-		doc='''current period number''')
 
 	paid_period = models.BooleanField(
 		doc='''1/True if this is a paid period, 0/False otherwise''')

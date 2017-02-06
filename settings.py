@@ -124,8 +124,8 @@ mturk_hit_settings = {
 # e.g. self.session.config['participation_fee']
 
 SESSION_CONFIG_DEFAULTS = {
-    'real_world_currency_per_point': 0.01,
-    'participation_fee': 1.00,
+    'real_world_currency_per_point': 1.00,
+    'participation_fee': 10.00,
     'num_bots': 6,
     'doc': "NYUAD SSEL",
     'mturk_hit_settings': mturk_hit_settings,
@@ -133,30 +133,48 @@ SESSION_CONFIG_DEFAULTS = {
 
 SESSION_CONFIGS = [
     {
-        'name': 'hotellingmarkup_01_2p',
-        'display_name': "Hotelling Markups - 2 player",
+        'name': 'hotellingmarkup_01_2p_10t',
+        'display_name': "Hotelling Markups - 2 player - T=1",
         'num_demo_participants': 2,
         'app_sequence': [
-            'hotellingmarkup_01_2p'
+            'hotellingmarketup_00',
+            'hotellingmarkup_01_2p_10t_01',
+            'hotellingmarkup_01_2p_10t_02',
+            'hotellingmarkup_15_payment'
         ],
-        'paid_period':True,
-        'subperiod_time': 300,
-        'transport_cost': 1,
+        # 'paid_period':True,
+        'subperiod_time': 5,
+        # 'transport_cost': 1,
+    },
+    {
+        'name': 'hotellingmarkup_01_2p_05t',
+        'display_name': "Hotelling Markups - 2 player - T=0.5",
+        'num_demo_participants': 2,
+        'app_sequence': [
+            'hotellingmarketup_00',
+            'hotellingmarkup_01_2p_05t_01',
+            'hotellingmarkup_01_2p_05t_02',
+            'hotellingmarkup_15_payment'
+        ],
+        # 'paid_period':True,
+        'subperiod_time': 5,
+        # 'transport_cost': 1,
     },
     {
         'name': 'hotellingmarkup_01_4p',
         'display_name': "Hotelling Markups - 4 player",
         'num_demo_participants': 4,
         'app_sequence': [
+            'hotellingmarketup_00',
             'hotellingmarkup_01_4p'
         ],
-        'paid_period':True,
-        'subperiod_time': 60,
-        'transport_cost': 1,
-        'p1_loc':0.245,
-        'p2_loc':0.255,
-        'p3_loc':0.745,
-        'p4_loc':0.755,
+        # 'paid_period':True,
+        'subperiod_time': 5,
+        # 'transport_cost': 1,
+        'p1_loc':0.15,
+        'p2_loc':0.4,
+        'p3_loc':0.6,
+        'p4_loc':0.85,
     },
 
 

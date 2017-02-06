@@ -19,6 +19,7 @@
 .tg .tg-0ord{text-align:right}
 .tg .tg-lqy6{text-align:right;vertical-align:top}
 .tg .tg-031e{text-align:center}
+.tg .tg-031r{text-align:right}
 </style>
 <table class="tg">
   <tr>
@@ -53,7 +54,7 @@
 
 
   <tr>
-    <td class="tg-031e" colspan="1" width="100px">
+    <td class="tg-031r" colspan="1" width="100px">
         <h2><span name="price_text" id="id_price_text">{{ my_prev_price|floatformat:"3" }}</span>  </h2>
     </td>
     <td class="tg-031e" colspan="9" width="900px">
@@ -285,8 +286,9 @@ In Debug Mode Only:
     <td class="tg-yw4l" colspan="2"></td>
   </tr>
 </table>  
-    {% endif %}
  -->
+    {% endif %}
+
 
 
 
@@ -579,12 +581,7 @@ function draw(my_p_) {
 
     players[{{id_in_group}}-1].price = my_p;
     // update html text stuff
-    document.getElementById('id_price_text').innerHTML = (my_p * 100).toFixed(0);
-    document.getElementById('id_price_text1').innerHTML = players[0].price;
-    document.getElementById('id_price_text2').innerHTML = players[1].price;
-    document.getElementById('id_price_text3').innerHTML = players[2].price;
-    document.getElementById('id_price_text4').innerHTML = players[3].price;
-
+   
 
     // payoff function calc
     var t = Number({{transport_cost}});
@@ -704,14 +701,7 @@ function draw(my_p_) {
 
 
 
-    document.getElementById('intersection_1_2').innerHTML = intersection_1_2.toFixed(4);
-    document.getElementById('intersection_1_3').innerHTML = intersection_1_3.toFixed(4);
-    document.getElementById('intersection_1_4').innerHTML = intersection_1_4.toFixed(4);
-
-    document.getElementById('id_market_boundary_1').innerHTML = players[0].boundry.toFixed(4);
-    document.getElementById('id_market_share_1').innerHTML = players[0].market_share;
-    document.getElementById('id_profit_1').innerHTML = players[0].profit.toFixed(4);
-
+    
 
     //p4
     if (intersection_3_4 > players[3].loc || intersection_2_4 > players[3].loc || intersection_1_4 > players[3].loc){
@@ -769,15 +759,7 @@ function draw(my_p_) {
     }
 
 
-    document.getElementById('intersection_1_4_2nd').innerHTML = intersection_1_4.toFixed(4);
-    document.getElementById('intersection_2_4').innerHTML = intersection_2_4.toFixed(4);
-    document.getElementById('intersection_3_4').innerHTML = intersection_3_4.toFixed(4);
-
-    document.getElementById('id_market_boundary_4').innerHTML = players[3].boundry.toFixed(4);
-    document.getElementById('id_market_share_4').innerHTML = players[3].market_share;
-    document.getElementById('id_profit_4').innerHTML = players[3].profit.toFixed(4);
-
-
+  
 
     //p2
     var intersection_1_2 = (t *Number(players[1].loc)+Number(players[1].price) + t * Number(players[0].loc) - Number(players[0].price)) / (2*t);
@@ -816,14 +798,6 @@ function draw(my_p_) {
     }
 
 
-
-    document.getElementById('intersection_1_2_2nd').innerHTML = intersection_1_2.toFixed(4);
-    document.getElementById('intersection_2_3').innerHTML = intersection_2_3.toFixed(4);
-    document.getElementById('intersection_2_4_2nd').innerHTML = intersection_2_4.toFixed(4);
-
-    document.getElementById('id_market_boundary_2').innerHTML = players[1].boundry.toFixed(4);
-    document.getElementById('id_market_share_2').innerHTML = players[1].market_share;
-    document.getElementById('id_profit_2').innerHTML = players[1].profit.toFixed(4);
 
 
 
@@ -867,14 +841,7 @@ function draw(my_p_) {
 
 
 
-    document.getElementById('intersection_1_3_2nd').innerHTML = intersection_1_3.toFixed(4);
-    document.getElementById('intersection_2_3_2nd').innerHTML = intersection_2_3.toFixed(4);
-    document.getElementById('intersection_3_4_2nd').innerHTML = intersection_3_4.toFixed(4);
-
-    document.getElementById('id_market_boundary_3').innerHTML = players[2].boundry.toFixed(4);
-    document.getElementById('id_market_share_3').innerHTML = players[2].market_share;
-    document.getElementById('id_profit_3').innerHTML = players[2].profit.toFixed(4);
-
+  
 
     var ctx = canvas.getContext('2d');
 
@@ -915,6 +882,48 @@ function draw(my_p_) {
     drawFullAction(players[{{id_in_group}}-1].price,players[{{id_in_group}}-1].loc,ht,wdt,mrg,t);
     drawFullBall(players[{{id_in_group}}-1].price,players[{{id_in_group}}-1].loc,ht,wdt,mrg); 
 
+
+    document.getElementById('id_price_text').innerHTML = (my_p * 100).toFixed(0);
+    document.getElementById('id_price_text1').innerHTML = players[0].price;
+    document.getElementById('id_price_text2').innerHTML = players[1].price;
+    document.getElementById('id_price_text3').innerHTML = players[2].price;
+    document.getElementById('id_price_text4').innerHTML = players[3].price;
+
+    document.getElementById('intersection_1_2').innerHTML = intersection_1_2.toFixed(4);
+    document.getElementById('intersection_1_3').innerHTML = intersection_1_3.toFixed(4);
+    document.getElementById('intersection_1_4').innerHTML = intersection_1_4.toFixed(4);
+
+    document.getElementById('id_market_boundary_1').innerHTML = players[0].boundry.toFixed(4);
+    document.getElementById('id_market_share_1').innerHTML = players[0].market_share;
+    document.getElementById('id_profit_1').innerHTML = players[0].profit.toFixed(4);
+
+
+
+    document.getElementById('intersection_1_2_2nd').innerHTML = intersection_1_2.toFixed(4);
+    document.getElementById('intersection_2_3').innerHTML = intersection_2_3.toFixed(4);
+    document.getElementById('intersection_2_4_2nd').innerHTML = intersection_2_4.toFixed(4);
+
+    document.getElementById('id_market_boundary_2').innerHTML = players[1].boundry.toFixed(4);
+    document.getElementById('id_market_share_2').innerHTML = players[1].market_share;
+    document.getElementById('id_profit_2').innerHTML = players[1].profit.toFixed(4);
+
+    document.getElementById('intersection_1_3_2nd').innerHTML = intersection_1_3.toFixed(4);
+    document.getElementById('intersection_2_3_2nd').innerHTML = intersection_2_3.toFixed(4);
+    document.getElementById('intersection_3_4_2nd').innerHTML = intersection_3_4.toFixed(4);
+
+    document.getElementById('id_market_boundary_3').innerHTML = players[2].boundry.toFixed(4);
+    document.getElementById('id_market_share_3').innerHTML = players[2].market_share;
+    document.getElementById('id_profit_3').innerHTML = players[2].profit.toFixed(4);
+
+
+
+    document.getElementById('intersection_1_4_2nd').innerHTML = intersection_1_4.toFixed(4);
+    document.getElementById('intersection_2_4').innerHTML = intersection_2_4.toFixed(4);
+    document.getElementById('intersection_3_4').innerHTML = intersection_3_4.toFixed(4);
+
+    document.getElementById('id_market_boundary_4').innerHTML = players[3].boundry.toFixed(4);
+    document.getElementById('id_market_share_4').innerHTML = players[3].market_share;
+    document.getElementById('id_profit_4').innerHTML = players[3].profit.toFixed(4);
 
 
 
