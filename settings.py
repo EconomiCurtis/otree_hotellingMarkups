@@ -56,7 +56,7 @@ AWS_SECRET_ACCESS_KEY = environ.get('AWS_SECRET_ACCESS_KEY')
 
 # e.g. EUR, CAD, GBP, CHF, CNY, JPY
 REAL_WORLD_CURRENCY_CODE = 'USD'
-USE_POINTS = True
+USE_POINTS = False
 
 
 # e.g. en, de, fr, it, ja, zh-hans
@@ -133,222 +133,330 @@ SESSION_CONFIG_DEFAULTS = {
 
 SESSION_CONFIGS = [
     {
-        'name': 'hotellingmarkup_01_2p_10t',
-        'display_name': "Hotelling Markups - 2 player - T=1",
+        'name': 'hotellingmarkup_01_2p_sess01',
+        'display_name': "Hotelling Markups - 2 player - 3-periods of each; T=0.75,0.50,0.25,1.00,0.10 - 20 7-sec subperiods",
         'num_demo_participants': 2,
         'app_sequence': [
             'hotellingmarketup_00',
-            'hotellingmarkup_01_2p_10t_01',
-            'hotellingmarkup_01_2p_10t_02',
-            'hotellingmarkup_15_payment'
+            'hotellingmarkup_2p_075t_01',
+            'hotellingmarkup_2p_075t_02',
+            'hotellingmarkup_2p_075t_03',
+            'hotellingmarkup_2p_050t_04',
+            'hotellingmarkup_2p_050t_05',
+            'hotellingmarkup_2p_050t_06',
+            'hotellingmarkup_2p_025t_07',
+            'hotellingmarkup_2p_025t_08',
+            'hotellingmarkup_2p_025t_09',
+            'hotellingmarkup_2p_100t_10',
+            'hotellingmarkup_2p_100t_11',
+            'hotellingmarkup_2p_100t_12',
+            'hotellingmarkup_2p_010t_13',
+            'hotellingmarkup_2p_010t_14',
+            'hotellingmarkup_2p_010t_15',
+            'hotellingmarkup_payment_20'
         ],
-        # 'paid_period':True,
-        'subperiod_time': 5,
-        # 'transport_cost': 1,
+        'subperiod_time': 7,
     },
     {
-        'name': 'hotellingmarkup_01_2p_05t',
-        'display_name': "Hotelling Markups - 2 player - T=0.5",
+        'name': 'hotellingmarkup_01_2p_sess02',
+        'display_name': "Hotelling Markups - 2 player - 3-periods of each; T=0.5,0.1,0.75,0.25,1  - 20 7-sec subperiods",
         'num_demo_participants': 2,
         'app_sequence': [
             'hotellingmarketup_00',
-            'hotellingmarkup_01_2p_05t_01',
-            'hotellingmarkup_01_2p_05t_02',
-            'hotellingmarkup_15_payment'
+            'hotellingmarkup_2p_050t_01',
+            'hotellingmarkup_2p_050t_02',
+            'hotellingmarkup_2p_050t_03',
+            'hotellingmarkup_2p_010t_04',
+            'hotellingmarkup_2p_010t_05',
+            'hotellingmarkup_2p_010t_06',
+            'hotellingmarkup_2p_075t_07',
+            'hotellingmarkup_2p_075t_08',
+            'hotellingmarkup_2p_075t_09',
+            'hotellingmarkup_2p_025t_10',
+            'hotellingmarkup_2p_025t_11',
+            'hotellingmarkup_2p_025t_12',
+            'hotellingmarkup_2p_100t_13',
+            'hotellingmarkup_2p_100t_14',
+            'hotellingmarkup_2p_100t_15',
+            'hotellingmarkup_payment_20'
         ],
-        # 'paid_period':True,
-        'subperiod_time': 5,
-        # 'transport_cost': 1,
+        'subperiod_time': 7,
     },
     {
-        'name': 'hotellingmarkup_01_4p',
-        'display_name': "Hotelling Markups - 4 player",
+        'name': 'hotellingmarkup_01_4p_sess01',
+        'display_name': "Hotelling Markups - 4 player - 3-periods of each; T=0.75,0.50,0.25,1.00,0.10 - 20 7-sec subperiods",
         'num_demo_participants': 4,
         'app_sequence': [
             'hotellingmarketup_00',
-            'hotellingmarkup_01_4p'
+            'hotellingmarkup_4p_075t_01',
+            'hotellingmarkup_4p_075t_02',
+            'hotellingmarkup_4p_075t_03',
+            'hotellingmarkup_4p_050t_04',
+            'hotellingmarkup_4p_050t_05',
+            'hotellingmarkup_4p_050t_06',
+            'hotellingmarkup_4p_025t_07',
+            'hotellingmarkup_4p_025t_08',
+            'hotellingmarkup_4p_025t_09',
+            'hotellingmarkup_4p_100t_10',
+            'hotellingmarkup_4p_100t_11',
+            'hotellingmarkup_4p_100t_12',
+            'hotellingmarkup_4p_010t_13',
+            'hotellingmarkup_4p_010t_14',
+            'hotellingmarkup_4p_010t_15',
+            'hotellingmarkup_payment_20'
         ],
-        # 'paid_period':True,
-        'subperiod_time': 5,
-        # 'transport_cost': 1,
-        'p1_loc':0.15,
-        'p2_loc':0.4,
-        'p3_loc':0.6,
-        'p4_loc':0.85,
-    },
-
-
-
-
-    {
-        'name': 'public_goods',
-        'display_name': "oTree Demo - Public Goods",
-        'num_demo_participants': 3,
-        'app_sequence': ['public_goods', 'payment_info'],
+        'subperiod_time': 7,
+        'p1_loc':0.125,
+        'p2_loc':0.375,
+        'p3_loc':0.625,
+        'p4_loc':0.875, 
     },
     {
-        'name': 'trust',
-        'display_name': "oTree Demo - Trust Game",
-        'num_demo_participants': 2,
-        'app_sequence': ['trust', 'payment_info'],
-    },
-    {
-        'name': 'beauty',
-        'display_name': "oTree Demo - Beauty Contest",
-        'num_demo_participants': 5,
-        'num_bots': 5,
-        'app_sequence': ['beauty', 'payment_info'],
-    },
-    {
-        'name': 'survey',
-        'display_name': "oTree Demo - Survey",
-        'num_demo_participants': 1,
-        'app_sequence': ['survey', 'payment_info'],
-    },
-    {
-        'name': 'prisoner',
-        'display_name': "oTree Demo - Prisoner's Dilemma",
-        'num_demo_participants': 2,
-        'app_sequence': ['prisoner', 'payment_info'],
-    },
-    {
-        'name': 'ultimatum',
-        'display_name': "oTree Demo - Ultimatum (randomized: strategy vs. direct response)",
-        'num_demo_participants': 2,
-        'app_sequence': ['ultimatum', 'payment_info'],
-    },
-    {
-        'name': 'ultimatum_strategy',
-        'display_name': "oTree Demo - Ultimatum (strategy method treatment)",
-        'num_demo_participants': 2,
-        'app_sequence': ['ultimatum', 'payment_info'],
-        'treatment': 'strategy',
-    },
-    {
-        'name': 'ultimatum_non_strategy',
-        'display_name': "oTree Demo - Ultimatum (direct response treatment)",
-        'num_demo_participants': 2,
-        'app_sequence': ['ultimatum', 'payment_info'],
-        'treatment': 'direct_response',
-    },
-    {
-        'name': 'battle_of_the_sexes',
-        'display_name': "oTree Demo - Battle of the Sexes",
-        'num_demo_participants': 2,
+        'name': 'hotellingmarkup_01_4p_sess02',
+        'display_name': "Hotelling Markups - 4 player - 3-periods of each; T=0.5,0.1,0.75,0.25,1 - 20 7-sec subperiods",
+        'num_demo_participants': 4,
         'app_sequence': [
-            'battle_of_the_sexes', 'payment_info'
+            'hotellingmarketup_00',
+            'hotellingmarkup_4p_050t_01',
+            'hotellingmarkup_4p_050t_02',
+            'hotellingmarkup_4p_050t_03',
+            'hotellingmarkup_4p_010t_04',
+            'hotellingmarkup_4p_010t_05',
+            'hotellingmarkup_4p_010t_06',
+            'hotellingmarkup_4p_075t_07',
+            'hotellingmarkup_4p_075t_08',
+            'hotellingmarkup_4p_075t_09',
+            'hotellingmarkup_4p_025t_10',
+            'hotellingmarkup_4p_025t_11',
+            'hotellingmarkup_4p_025t_12',
+            'hotellingmarkup_4p_100t_13',
+            'hotellingmarkup_4p_100t_14',
+            'hotellingmarkup_4p_100t_15',
+            'hotellingmarkup_payment_20'
         ],
-    },
-    {
-        'name': 'vickrey_auction',
-        'display_name': "oTree Demo - Vickrey Auction",
-        'num_demo_participants': 3,
-        'app_sequence': ['vickrey_auction', 'payment_info'],
-    },
-    {
-        'name': 'volunteer_dilemma',
-        'display_name': "oTree Demo - Volunteer's Dilemma",
-        'num_demo_participants': 3,
-        'app_sequence': ['volunteer_dilemma', 'payment_info'],
-    },
-    {
-        'name': 'cournot',
-        'display_name': "oTree Demo - Cournot Competition",
-        'num_demo_participants': 2,
-        'app_sequence': [
-            'cournot', 'payment_info'
-        ],
-    },
-    {
-        'name': 'principal_agent',
-        'display_name': "oTree Demo - Principal Agent",
-        'num_demo_participants': 2,
-        'app_sequence': ['principal_agent', 'payment_info'],
-    },
-    {
-        'name': 'dictator',
-        'display_name': "oTree Demo - Dictator Game",
-        'num_demo_participants': 2,
-        'app_sequence': ['dictator', 'payment_info'],
-    },
-    {
-        'name': 'matching_pennies',
-        'display_name': "oTree Demo - Matching Pennies",
-        'num_demo_participants': 2,
-        'app_sequence': [
-            'matching_pennies',
-        ],
-    },
-    {
-        'name': 'traveler_dilemma',
-        'display_name': "oTree Demo - Traveler's Dilemma",
-        'num_demo_participants': 2,
-        'app_sequence': ['traveler_dilemma', 'payment_info'],
-    },
-    {
-        'name': 'bargaining',
-        'display_name': "oTree Demo - Bargaining Game",
-        'num_demo_participants': 2,
-        'app_sequence': ['bargaining', 'payment_info'],
-    },
-    {
-        'name': 'common_value_auction',
-        'display_name': "oTree Demo - Common Value Auction",
-        'num_demo_participants': 3,
-        'app_sequence': ['common_value_auction', 'payment_info'],
-    },
-    {
-        'name': 'stackelberg',
-        'display_name': "oTree Demo - Stackelberg Competition",
-        'real_world_currency_per_point': 0.01,
-        'num_demo_participants': 2,
-        'app_sequence': [
-            'stackelberg', 'payment_info'
-        ],
-    },
-    {
-        'name': 'bertrand',
-        'display_name': "oTree Demo - Bertrand Competition",
-        'num_demo_participants': 2,
-        'app_sequence': [
-            'bertrand', 'payment_info'
-        ],
-    },
-    {
-        'name': 'stag_hunt',
-        'display_name': "oTree Demo - Stag Hunt",
-        'num_demo_participants': 2,
-        'app_sequence': ['stag_hunt', 'payment_info'],
-    },
-    {
-        'name': 'real_effort',
-        'display_name': "oTree Demo - Real-effort transcription task",
-        'num_demo_participants': 1,
-        'app_sequence': [
-            'real_effort',
-        ],
-    },
-    {
-        'name': 'lemon_market',
-        'display_name': "oTree Demo - Lemon Market Game",
-        'num_demo_participants': 3,
-        'app_sequence': [
-            'lemon_market', 'payment_info'
-        ],
-    },
-    {
-        'name': 'public_goods_simple',
-        'display_name': "oTree Demo - Public Goods (simple version from tutorial)",
-        'num_demo_participants': 3,
-        'app_sequence': ['public_goods_simple', 'survey', 'payment_info'],
+        'subperiod_time': 7,
+        'p1_loc':0.125,
+        'p2_loc':0.375,
+        'p3_loc':0.625,
+        'p4_loc':0.875, 
     },
 
     {
-        'name': 'trust_simple',
-        'display_name': "oTree Demo - Trust Game (simple version from tutorial)",
+        'name': 'hotellingmarkup_01_2p_test',
+        'display_name': "Hotelling Markups - 2 player - 1-periods of each; T=0.1,0.25,0.5,0.75,1.0 - 20 7-sec subperiods",
         'num_demo_participants': 2,
-        'app_sequence': ['trust_simple'],
+        'app_sequence': [
+            'hotellingmarketup_00',
+            'hotellingmarkup_2p_010t_01',
+            'hotellingmarkup_2p_025t_01',
+            'hotellingmarkup_2p_050t_01',
+            'hotellingmarkup_2p_075t_01',
+            'hotellingmarkup_2p_100t_01',
+            'hotellingmarkup_payment_20'
+        ],
+        'subperiod_time': 7,
     },
+    # {
+    #     'name': 'hotellingmarkup_01_4p_050t',
+    #     'display_name': "Hotelling Markups - 4 player - t=0.5",
+    #     'num_demo_participants': 4,
+    #     'app_sequence': [
+    #         'hotellingmarketup_00',
+    #         'hotellingmarkup_4p_050t_01',
+    #         'hotellingmarkup_payment_20'
+    #     ],
+    #     'subperiod_time': 7,
+    #     'p1_loc':0.125,
+    #     'p2_loc':0.375,
+    #     'p3_loc':0.625,
+    #     'p4_loc':0.875,
+    # },
+    # {
+    #     'name': 'hotellingmarkup_01_4p_010t',
+    #     'display_name': "Hotelling Markups - 4 player - t=0.1",
+    #     'num_demo_participants': 4,
+    #     'app_sequence': [
+    #         'hotellingmarketup_00',
+    #         'hotellingmarkup_4p_010t_01',
+    #         'hotellingmarkup_payment_20'
+    #     ],
+    #     'subperiod_time': 7,
+    #     'p1_loc':0.125,
+    #     'p2_loc':0.375,
+    #     'p3_loc':0.625,
+    #     'p4_loc':0.875,
+    # },
+
+
+    # {
+    #     'name': 'public_goods',
+    #     'display_name': "oTree Demo - Public Goods",
+    #     'num_demo_participants': 3,
+    #     'app_sequence': ['public_goods', 'payment_info'],
+    # },
+    # {
+    #     'name': 'trust',
+    #     'display_name': "oTree Demo - Trust Game",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['trust', 'payment_info'],
+    # },
+    # {
+    #     'name': 'beauty',
+    #     'display_name': "oTree Demo - Beauty Contest",
+    #     'num_demo_participants': 5,
+    #     'num_bots': 5,
+    #     'app_sequence': ['beauty', 'payment_info'],
+    # },
+    # {
+    #     'name': 'survey',
+    #     'display_name': "oTree Demo - Survey",
+    #     'num_demo_participants': 1,
+    #     'app_sequence': ['survey', 'payment_info'],
+    # },
+    # {
+    #     'name': 'prisoner',
+    #     'display_name': "oTree Demo - Prisoner's Dilemma",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['prisoner', 'payment_info'],
+    # },
+    # {
+    #     'name': 'ultimatum',
+    #     'display_name': "oTree Demo - Ultimatum (randomized: strategy vs. direct response)",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['ultimatum', 'payment_info'],
+    # },
+    # {
+    #     'name': 'ultimatum_strategy',
+    #     'display_name': "oTree Demo - Ultimatum (strategy method treatment)",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['ultimatum', 'payment_info'],
+    #     'treatment': 'strategy',
+    # },
+    # {
+    #     'name': 'ultimatum_non_strategy',
+    #     'display_name': "oTree Demo - Ultimatum (direct response treatment)",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['ultimatum', 'payment_info'],
+    #     'treatment': 'direct_response',
+    # },
+    # {
+    #     'name': 'battle_of_the_sexes',
+    #     'display_name': "oTree Demo - Battle of the Sexes",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': [
+    #         'battle_of_the_sexes', 'payment_info'
+    #     ],
+    # },
+    # {
+    #     'name': 'vickrey_auction',
+    #     'display_name': "oTree Demo - Vickrey Auction",
+    #     'num_demo_participants': 3,
+    #     'app_sequence': ['vickrey_auction', 'payment_info'],
+    # },
+    # {
+    #     'name': 'volunteer_dilemma',
+    #     'display_name': "oTree Demo - Volunteer's Dilemma",
+    #     'num_demo_participants': 3,
+    #     'app_sequence': ['volunteer_dilemma', 'payment_info'],
+    # },
+    # {
+    #     'name': 'cournot',
+    #     'display_name': "oTree Demo - Cournot Competition",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': [
+    #         'cournot', 'payment_info'
+    #     ],
+    # },
+    # {
+    #     'name': 'principal_agent',
+    #     'display_name': "oTree Demo - Principal Agent",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['principal_agent', 'payment_info'],
+    # },
+    # {
+    #     'name': 'dictator',
+    #     'display_name': "oTree Demo - Dictator Game",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['dictator', 'payment_info'],
+    # },
+    # {
+    #     'name': 'matching_pennies',
+    #     'display_name': "oTree Demo - Matching Pennies",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': [
+    #         'matching_pennies',
+    #     ],
+    # },
+    # {
+    #     'name': 'traveler_dilemma',
+    #     'display_name': "oTree Demo - Traveler's Dilemma",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['traveler_dilemma', 'payment_info'],
+    # },
+    # {
+    #     'name': 'bargaining',
+    #     'display_name': "oTree Demo - Bargaining Game",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['bargaining', 'payment_info'],
+    # },
+    # {
+    #     'name': 'common_value_auction',
+    #     'display_name': "oTree Demo - Common Value Auction",
+    #     'num_demo_participants': 3,
+    #     'app_sequence': ['common_value_auction', 'payment_info'],
+    # },
+    # {
+    #     'name': 'stackelberg',
+    #     'display_name': "oTree Demo - Stackelberg Competition",
+    #     'real_world_currency_per_point': 0.01,
+    #     'num_demo_participants': 2,
+    #     'app_sequence': [
+    #         'stackelberg', 'payment_info'
+    #     ],
+    # },
+    # {
+    #     'name': 'bertrand',
+    #     'display_name': "oTree Demo - Bertrand Competition",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': [
+    #         'bertrand', 'payment_info'
+    #     ],
+    # },
+    # {
+    #     'name': 'stag_hunt',
+    #     'display_name': "oTree Demo - Stag Hunt",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['stag_hunt', 'payment_info'],
+    # },
+    # {
+    #     'name': 'real_effort',
+    #     'display_name': "oTree Demo - Real-effort transcription task",
+    #     'num_demo_participants': 1,
+    #     'app_sequence': [
+    #         'real_effort',
+    #     ],
+    # },
+    # {
+    #     'name': 'lemon_market',
+    #     'display_name': "oTree Demo - Lemon Market Game",
+    #     'num_demo_participants': 3,
+    #     'app_sequence': [
+    #         'lemon_market', 'payment_info'
+    #     ],
+    # },
+    # {
+    #     'name': 'public_goods_simple',
+    #     'display_name': "oTree Demo - Public Goods (simple version from tutorial)",
+    #     'num_demo_participants': 3,
+    #     'app_sequence': ['public_goods_simple', 'survey', 'payment_info'],
+    # },
+
+    # {
+    #     'name': 'trust_simple',
+    #     'display_name': "oTree Demo - Trust Game (simple version from tutorial)",
+    #     'num_demo_participants': 2,
+    #     'app_sequence': ['trust_simple'],
+    # },
 
 ]
 
