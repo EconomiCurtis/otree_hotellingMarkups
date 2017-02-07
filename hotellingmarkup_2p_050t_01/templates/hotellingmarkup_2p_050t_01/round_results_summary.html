@@ -1,0 +1,27 @@
+{% extends "global/BaseHotMarkup.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Period Results Summary
+{% endblock %}
+
+{% block content %}
+
+    <div class="panel panel-success">
+
+        <div class="panel-heading">
+            <p>
+                Your final score this period is {{cumulative_round_payoff}}
+            </p>
+        </div>
+    </div>
+
+    
+
+{% if debug %}
+debug mode only:
+    {% next_button %}
+{% endif %}
+
+
+{% endblock %}

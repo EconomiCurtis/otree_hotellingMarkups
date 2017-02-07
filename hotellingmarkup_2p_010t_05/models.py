@@ -35,9 +35,6 @@ class Constants(BaseConstants):
     players_per_group = 2 
     transport_cost = 0.1
 
-
-
-
 class Subsession(BaseSubsession):
 
 	def before_session_starts(self):

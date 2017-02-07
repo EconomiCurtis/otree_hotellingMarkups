@@ -1,0 +1,45 @@
+{% extends "global/BaseHotMarkup.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    The Round is About to Begin
+{% endblock %}
+
+{% block content %}
+
+{% load otree_tags staticfiles %}
+
+<div class="instructions well well-lg">
+
+    <h2 class="panel-sub-heading">
+        
+    </h2>
+
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'global/matrix.css' %}"/>
+
+
+    <h3>
+    Please wait, the period will start shortly. 
+    </h2>
+    
+    <p>
+        <br>
+    </p> 
+
+</div>
+
+        <h4 align="right" ><font color="f7f7f7">
+            t:{{treatment_t}} - 
+            paid:{{paid_period}} - 
+            my_loc:{{my_loc}} -  
+            other_loc:{{other_loc}}
+            </font>
+         </h4>
+
+{% if debug %}
+debug mode only 
+    {% next_button %}
+{% endif %}
+
+{% endblock %}

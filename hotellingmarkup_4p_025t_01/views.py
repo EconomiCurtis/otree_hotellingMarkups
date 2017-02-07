@@ -5,8 +5,8 @@ from .models import Constants
 from django.conf import settings
 import time
 
-class Intro(Page):
-    # timeout_seconds = 180
+class period_init_wait(Page):
+    timeout_seconds = 10
 
     form_model = models.Player
 
@@ -102,6 +102,7 @@ class task(Page):
             'cumulative_round_payoff':round(cumulative_round_payoff * 100, 3),
             'prev_market_table':prev_market_table,
             'debug':settings.DEBUG,
+            'period_num':self.player.period_number,
         }
 
 
@@ -142,7 +143,9 @@ class ResultsWaitPage(WaitPage):
 
 
 
-class Results(Page):
+class period_summary_review(Page):
+    timeout_seconds = 20
+
     def is_displayed(self):
         return self.round_number == Constants.num_rounds
 
@@ -159,9 +162,9 @@ class Results(Page):
 
 
 
-page_sequence = [Intro, WaitPage1, 
+page_sequence = [period_init_wait, WaitPage1, 
     task, WaitPage, 
-    ResultsWaitPage, Results
+    ResultsWaitPage, period_summary_review
     ]
 
 

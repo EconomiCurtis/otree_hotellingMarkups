@@ -5,8 +5,8 @@ from .models import Constants
 from django.conf import settings
 import time
 
-class Intro(Page):
-    # timeout_seconds = 180
+class round_init_wait(Page):
+    timeout_seconds = 10
 
     form_model = models.Player
 
@@ -82,6 +82,7 @@ class task(Page):
             'other_loc':self.player.get_others_in_group()[0].loc,
             'cumulative_round_payoff':round(cumulative_round_payoff * 100, 3),
             'debug':settings.DEBUG,
+            'period_num':self.player.period_number,
         }
 
 
@@ -119,7 +120,9 @@ class ResultsWaitPage(WaitPage):
 
 
 
-class Results(Page):
+class round_results_summary(Page):
+
+    timeout_seconds = 15
 
     def is_displayed(self):
         return self.round_number == (Constants.num_rounds)
@@ -138,10 +141,10 @@ class Results(Page):
 
 
 page_sequence = [
-        Intro, 
+        round_init_wait, 
         WaitPage1, 
         task, WaitPage,  
-        ResultsWaitPage, Results
+        ResultsWaitPage, round_results_summary
     ]
 
 
