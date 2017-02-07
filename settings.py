@@ -99,7 +99,7 @@ ROOMS = [
     # },
 ]
 
- 
+  
 # from here on are qualifications requirements for workers
 # see description for requirements on Amazon Mechanical Turk website:
 # http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QualificationRequirementDataStructureArticle.html
