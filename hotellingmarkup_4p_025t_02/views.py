@@ -6,7 +6,7 @@ from django.conf import settings
 import time
 
 class period_init_wait(Page):
-    timeout_seconds = 10
+    timeout_seconds = 5
 
     form_model = models.Player
 
@@ -144,7 +144,7 @@ class ResultsWaitPage(WaitPage):
 
 
 class period_summary_review(Page):
-    timeout_seconds = 20
+    timeout_seconds = 8
 
     def is_displayed(self):
         return self.round_number == Constants.num_rounds

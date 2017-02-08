@@ -218,7 +218,7 @@ SESSION_CONFIGS = [
         'p4_loc':0.875, 
     },
     {
-        'name': 'hotellingmarkup_01_4p_sess02',
+        'name': 'hotellingmarkup_01_2p_sess02',
         'display_name': "Hotelling Markups - 2 player - T=0.75, 0.25,   0.5,    1,  0.1,    0.25,   0.5,    1,  0.1,    0.75,   1,  0.1,    0.75,   0.25,   0.5  - 20 7-sec subperiods",
         'num_demo_participants': 2,
         'app_sequence': [
