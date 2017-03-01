@@ -31,7 +31,7 @@ doc = """
 class Constants(BaseConstants):
     name_in_url = 'task_02p_025t_14'
     task_timer = 5 #see Subsession, before_session_starts setting. 
-    num_rounds = 5
+    num_rounds = 20
     players_per_group = 2 
     transport_cost = 0.25
 
