@@ -64,7 +64,7 @@ USE_POINTS = False
 LANGUAGE_CODE = 'en'
 
 # if an app is included in SESSION_CONFIGS, you don't need to list it here
-INSTALLED_APPS = ['otree']
+INSTALLED_APPS = ['otree'   ]
 
 # SENTRY_DSN = ''
 
@@ -138,56 +138,65 @@ SESSION_CONFIG_DEFAULTS = {
 }
 
 SESSION_CONFIGS = [
-    # {
-    #     'name': 'hotellingmarkup_01_2p_sess01',
-    #     'display_name': "Hotelling Markups - 2 player - 3-periods of each; T=0.75,0.50,0.25,1.00,0.10 - 20 7-sec subperiods",
-    #     'num_demo_participants': 2,
-    #     'app_sequence': [
-    #         'hotellingmarketup_00',
-    #         'hotellingmarkup_2p_075t_01',
-    #         'hotellingmarkup_2p_075t_02',
-    #         'hotellingmarkup_2p_075t_03',
-    #         'hotellingmarkup_2p_050t_04',
-    #         'hotellingmarkup_2p_050t_05',
-    #         'hotellingmarkup_2p_050t_06',
-    #         'hotellingmarkup_2p_025t_07',
-    #         'hotellingmarkup_2p_025t_08',
-    #         'hotellingmarkup_2p_025t_09',
-    #         'hotellingmarkup_2p_100t_10',
-    #         'hotellingmarkup_2p_100t_11',
-    #         'hotellingmarkup_2p_100t_12',
-    #         'hotellingmarkup_2p_010t_13',
-    #         'hotellingmarkup_2p_010t_14',
-    #         'hotellingmarkup_2p_010t_15',
-    #         'hotellingmarkup_payment_20'
-    #     ],
-    #     'subperiod_time': 7,
-    # },
-    # {
-    #     'name': 'hotellingmarkup_01_2p_sess02',
-    #     'display_name': "Hotelling Markups - 2 player - 3-periods of each; T=0.5,0.1,0.75,0.25,1  - 20 7-sec subperiods",
-    #     'num_demo_participants': 2,
-    #     'app_sequence': [
-    #         'hotellingmarketup_00',
-    #         'hotellingmarkup_2p_050t_01',
-    #         'hotellingmarkup_2p_050t_02',
-    #         'hotellingmarkup_2p_050t_03',
-    #         'hotellingmarkup_2p_010t_04',
-    #         'hotellingmarkup_2p_010t_05',
-    #         'hotellingmarkup_2p_010t_06',
-    #         'hotellingmarkup_2p_075t_07',
-    #         'hotellingmarkup_2p_075t_08',
-    #         'hotellingmarkup_2p_075t_09',
-    #         'hotellingmarkup_2p_025t_10',
-    #         'hotellingmarkup_2p_025t_11',
-    #         'hotellingmarkup_2p_025t_12',
-    #         'hotellingmarkup_2p_100t_13',
-    #         'hotellingmarkup_2p_100t_14',
-    #         'hotellingmarkup_2p_100t_15',
-    #         'hotellingmarkup_payment_20'
-    #     ],
-    #     'subperiod_time': 7,
-    # },
+    {
+        'name': 'hotellingmarkup',
+        'display_name': "Hotelling Markups Tester",
+        'app_sequence': [
+            'hotellingmarketup_00',
+            'hotellingmarkup'
+        ],
+        'num_demo_participants':4, # number of participants per group set in  models
+
+        'loc':None, # set with array [], if None, then spaced (1/N)/2 apart
+
+        #Number of Periods defined by number of arrays in t, mc and rp below. 
+
+        'numSubperiods' :20, # number of subperiods in a period. 
+        # if large, ensure 'num_rounds' in models is sufficently large
+        'subperiod_time': 300, # length, in seconds, of a subperiod
+
+        # below, each array indicate subperiod values for t, mc, and rp (and whatever else)
+        # if there are too few elements in a period's array, the array is repeated until numSubperiods. 
+        't':[
+            [1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,],
+            [0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,],
+            [0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,],
+            [0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50 ],
+            [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,],
+            [0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,0.1 ,],
+            [0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,0.75,],
+            [0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50,0.50 ],
+            [1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,],
+            [0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25,],
+        ], #shopping cost, each element is one subperiod in a period. 
+        'mc':[
+            [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,],
+            [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,],
+            [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,],
+            [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,],
+            [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,],
+            [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,],
+            [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,],
+            [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,],
+            [0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,],
+            [0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05,],
+
+        ], #firm mill cost, or per item cost, each element is one subperiod in a period. 
+        'rp':[
+            [1.00,],
+            [0.95,],
+            [1.00,],
+            [0.95],
+            [1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,],
+            [0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,],
+            [1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,],
+            [0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,],
+            [1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,1.00,],
+            [0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,0.95,],
+        ], # consumer reserve price,  each element is one subperiod in a period. 
+
+    },
+
     {
         'name': 'hotellingmarkup_01_4p_sess01',
         'display_name': "Hotelling Markups - 4 player - T=0.75, 0.25,   0.5,    1,  0.1,    0.25,   0.5,    1,  0.1,    0.75,   1,  0.1,    0.75,   0.25,   0.5   - 20 7-sec subperiods",
